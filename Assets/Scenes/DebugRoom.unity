@@ -778,17 +778,17 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 55
-  dashTime: 1
-  dashCooldown: 2
+  dashTime: 0.7
+  dashCooldown: 1.5
   dashForce: 9001
   dashMaxMagnitude: 30
-  dashMoveSpeed: 30
-  dashDeccelRate: 1.05
+  dashMoveSpeed: 10
+  dashDeccelRate: 1
   dashFOV: 85
   moveSpeed: 250
   walkMoveSpeed: 250
-  rotateSpeed: 2
-  jumpPower: 1400
+  rotateSpeed: 4
+  jumpPower: 1300
   walkMaxMagnitude: 15
   maxMagnitude: 15
   deccelRate: 1.1
@@ -798,7 +798,7 @@ MonoBehaviour:
   camDist: 0
   groundDist: 0.8
   hasControl: 1
-  FOVChangeRate: 200
+  FOVChangeRate: 150
   walkIncrements: 0.8
 --- !u!54 &1024737203
 Rigidbody:
@@ -810,7 +810,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
