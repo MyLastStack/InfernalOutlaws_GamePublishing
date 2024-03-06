@@ -7,7 +7,7 @@ public class GunScript : MonoBehaviour
 {
     //Firerate variables
     public float fireRate;
-    float timeStamp;
+    float timeStamp = 0;
     public float spread;
 
     //Gun variables
@@ -23,13 +23,13 @@ public class GunScript : MonoBehaviour
     public GameObject bulletImpact;
     public GameObject muzzleFlash;
     public GameObject muzzleFlashPosition;
-    AudioSource src;
+    //AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
 
     private void Awake()
     {
-        src = GetComponent<AudioSource>();
+        //src = GetComponent<AudioSource>();
         ammo = maxAmmo;
     }
 
@@ -44,7 +44,7 @@ public class GunScript : MonoBehaviour
         if (fireAction.IsPressed() && timeStamp + fireRate < Time.time && active && (usesAmmo && ammo > 0 || !usesAmmo) && Time.timeScale > 0)
         {
             timeStamp = Time.time;
-            src.Play();
+            //src.Play();
 
             //Create ray to point towards
             RaycastHit hit;
@@ -55,7 +55,7 @@ public class GunScript : MonoBehaviour
             {
                 transform.LookAt(hit.point);
                 var instance = Instantiate(bulletImpact);
-                instance.transform.position = hit.point;
+                instance.transform.position = hit.point - ray.direction * 0.01f;
                 instance.transform.forward = hit.normal;
                 //Deal damage
                 var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
@@ -79,6 +79,9 @@ public class GunScript : MonoBehaviour
             {
                 ammo -= 1;
             }
+        } else
+        {
+            Debug.Log("Didn't fire");
         }
     }
 
