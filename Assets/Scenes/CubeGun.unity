@@ -437,7 +437,7 @@ GameObject:
   - component: {fileID: 622210988}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -573,7 +573,7 @@ GameObject:
   - component: {fileID: 671886563}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1004,7 +1004,7 @@ GameObject:
   - component: {fileID: 1436169832}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1264,7 +1264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 0.01
-  spread: 0.04
+  spread: 0.1
   mask:
     serializedVersion: 2
     m_Bits: 51
@@ -1272,8 +1272,8 @@ MonoBehaviour:
   maxAmmo: 5000
   usesAmmo: 0
   damage: 5
-  range: 55
-  bulletImpact: {fileID: 1622085720}
+  range: 99999
+  bulletImpact: {fileID: 2053003883}
   cam: {fileID: 611051971}
   fireAction:
     m_Name: Fire
@@ -1392,7 +1392,7 @@ GameObject:
   - component: {fileID: 1622085721}
   m_Layer: 0
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1497,7 +1497,7 @@ GameObject:
   - component: {fileID: 2053003884}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
