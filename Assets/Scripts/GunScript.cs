@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static EventManager; //So so I don't have to repeat eventmanager over and over again
 
 public class GunScript : MonoBehaviour
 {
     //Firerate variables
     public float fireRate;
-    float timeStamp;
+    float timeStamp = 0;
     public float spread;
 
     //Gun variables
@@ -21,15 +22,15 @@ public class GunScript : MonoBehaviour
 
     //Components
     public GameObject bulletImpact;
-    public GameObject muzzleFlash;
-    public GameObject muzzleFlashPosition;
-    AudioSource src;
+    //public GameObject muzzleFlash;
+    //public GameObject muzzleFlashPosition;
+    //AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
 
     private void Awake()
     {
-        src = GetComponent<AudioSource>();
+        //src = GetComponent<AudioSource>();
         ammo = maxAmmo;
     }
 
@@ -43,8 +44,10 @@ public class GunScript : MonoBehaviour
         //Is the game unpaused?
         if (fireAction.IsPressed() && timeStamp + fireRate < Time.time && active && (usesAmmo && ammo > 0 || !usesAmmo) && Time.timeScale > 0)
         {
+            GunFired.Invoke(this);
+
             timeStamp = Time.time;
-            src.Play();
+            //src.Play();
 
             //Create ray to point towards
             RaycastHit hit;
@@ -53,14 +56,26 @@ public class GunScript : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
             {
+                GameObject hitEntity = hit.collider.gameObject;
                 transform.LookAt(hit.point);
-                var instance = Instantiate(bulletImpact);
-                instance.transform.position = hit.point;
-                instance.transform.forward = hit.normal;
+                if (hitEntity.tag == "Wall") //If it hit a wall/floor
+                {
+                    var instance = Instantiate(bulletImpact);
+                    instance.transform.position = hit.point - ray.direction * 0.01f;
+                    instance.transform.forward = hit.normal;
+                }
                 //Deal damage
                 var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
                 if (healthScript != null)
                 {
+                    //Invoke events
+                    GenericHitEntity.Invoke(hitEntity, damage);
+                    if(healthScript.type == EntityType.Enemy)
+                    {
+                        GenericHitEnemy.Invoke(hitEntity, damage);
+                        BulletHitEnemy.Invoke(this, hitEntity, damage);
+                    }
+
                     healthScript.health -= damage;
                 }
             }
@@ -70,12 +85,12 @@ public class GunScript : MonoBehaviour
             }
 
             //Create muzzle flash
-            var muzzleFlashInstance = Instantiate(muzzleFlash);
-            muzzleFlashInstance.transform.position = muzzleFlashPosition.transform.position;
-            muzzleFlashInstance.transform.rotation = transform.rotation;
-            
+            //var muzzleFlashInstance = Instantiate(muzzleFlash);
+            //muzzleFlashInstance.transform.position = muzzleFlashPosition.transform.position;
+            //muzzleFlashInstance.transform.rotation = transform.rotation;
+
             //Remove ammo
-            if(usesAmmo)
+            if (usesAmmo)
             {
                 ammo -= 1;
             }

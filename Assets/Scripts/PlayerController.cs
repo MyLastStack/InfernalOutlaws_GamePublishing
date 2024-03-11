@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static EventManager;
 
 public class PlayerController : MonoBehaviour
 {
@@ -68,15 +69,17 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         var onGroundLastFrame = onGround;
-        onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist);
-        //if(!onGroundLastFrame && onGround)
-        //{
-        //    landSrc.Play();
-        //}
+        onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
+        if(!onGroundLastFrame && onGround)
+        {
+            Land.Invoke(gameObject);
+            //Play landing sound here
+        }
         if (Time.timeScale > 0 && hasControl)
         {
             moveValue = moveAction.ReadValue<Vector2>();
 
+            //Handle rotation
             targetXRotation -= Input.GetAxis("Mouse Y") * rotateSpeed;
             targetYRotation += Input.GetAxis("Mouse X") * rotateSpeed;
             targetXRotation = Mathf.Clamp(targetXRotation, -90, 90);
@@ -144,6 +147,7 @@ public class PlayerController : MonoBehaviour
 
         if (dashAction.IsPressed() && hasControl && dashCooldownTimeLeft <= 0)
         {
+            PlayerDash.Invoke(gameObject);
             maxMagnitude = dashMaxMagnitude;
             rb.AddForce(transform.forward * dashForce);
             dashTimeLeft = dashTime;
@@ -154,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
         if (jumpAction.IsPressed() && onGround && hasControl)
         {
+            Jump.Invoke(gameObject);
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(jumpPower * Vector3.up);
         }
@@ -161,23 +166,26 @@ public class PlayerController : MonoBehaviour
 
     public void Movement()
     {
-        //Sorry Johnne, this looks like hell. I'll make sure to comment it well later lmao
+        //First, apply the force
         rb.AddRelativeForce(new Vector3(moveValue.x * moveSpeed, 0, moveValue.y * moveSpeed));
 
         if (moveValue.x == 0)
         {
+            //This dampens x velocity when left and right aren't held. It first converts to local velocity, reduces it, then converts it back to global velocity.
             var localVelocity = transform.InverseTransformDirection(rb.velocity);
             localVelocity = new Vector3(localVelocity.x / deccelRate, localVelocity.y, localVelocity.z);
             rb.velocity = transform.TransformDirection(localVelocity);
         }
         if (moveValue.y == 0)
         {
+            //This does the same but for z velocity
             var localVelocity = transform.InverseTransformDirection(rb.velocity);
             localVelocity = new Vector3(localVelocity.x, localVelocity.y, localVelocity.z / deccelRate);
             rb.velocity = transform.TransformDirection(localVelocity);
         }
         if (new Vector2(rb.velocity.x, rb.velocity.z).magnitude > maxMagnitude)
         {
+            //Finally, it clamps the magnitude of the velocity so that the player doesn't accelerate to infinity
             var clampedVelocity = Vector2.ClampMagnitude(new Vector2(rb.velocity.x, rb.velocity.z), maxMagnitude);
             rb.velocity = new Vector3(clampedVelocity.x, rb.velocity.y, clampedVelocity.y);
         }
