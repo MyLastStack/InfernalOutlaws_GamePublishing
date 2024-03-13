@@ -15,7 +15,7 @@ public class PlayerStats : ScriptableObject
     public Stat walkMaxMagnitudeStat;
 
     //Dash variables
-    [HideInInspector] public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
+    public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
     [HideInInspector] public float dashTimeLeft; //A tracker for dash time.
     [HideInInspector] public float dashCooldown { get { return dashCooldownStat.Value; } set { dashCooldownStat.SetBaseValue(value); } } //How long after a dash before the player can dash again
     [HideInInspector] public float dashCooldownTimeLeft; //A tracker for dash cooldown

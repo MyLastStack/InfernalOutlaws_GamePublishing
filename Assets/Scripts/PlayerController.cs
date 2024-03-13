@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(ps.dashTime);
+
         var onGroundLastFrame = onGround;
         onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
         if(!onGroundLastFrame && onGround)

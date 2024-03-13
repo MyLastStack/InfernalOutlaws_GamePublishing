@@ -12,20 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5803e53d4d151824a97126be8f36b702, type: 3}
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
-  dashTime: 0.7
+  dashTimeStat:
+    BaseValue: 0.7
+  dashCooldownStat:
+    BaseValue: 1.5
+  dashMaxMagnitudeStat:
+    BaseValue: 30
+  dashMoveSpeedStat:
+    BaseValue: 10
+  walkMoveSpeedStat:
+    BaseValue: 250
+  jumpPowerStat:
+    BaseValue: 1300
+  walkMaxMagnitudeStat:
+    BaseValue: 0
   dashTimeLeft: 0
-  dashCooldown: 1.5
   dashCooldownTimeLeft: 0
   dashForce: 9001
-  dashMaxMagnitude: 30
-  dashMoveSpeed: 10
   dashDeccelRate: 1
   dashFOV: 85
   moveSpeed: 250
-  walkMoveSpeed: 250
   rotateSpeed: 4
-  jumpPower: 1300
-  walkMaxMagnitude: 15
   maxMagnitude: 15
   deccelRate: 1.1
   walkDeccelRate: 1.1

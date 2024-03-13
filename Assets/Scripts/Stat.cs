@@ -8,46 +8,49 @@ public class Stat
 {
     public float BaseValue; //The starting value of the stat
 
-    private readonly List<StatModifier> modifiers; //The list of all modifiers of the stat (both flat and multiplicative)
+    private List<StatModifier> modifiers = new List<StatModifier>(); //The list of all modifiers of the stat (both flat and multiplicative)
+
+    private bool hasNotChanged = false;
+    private float _lastVal;
 
     public float Value
     {
         get
         {
-            if (hasChanged)
+            Debug.Log(hasNotChanged);
+            if (!hasNotChanged)
             {
                 _lastVal = CalculateValue();
-                hasChanged = false;
+                Debug.Log("Yo");
+                hasNotChanged = true;
             }
             return _lastVal;
         }
     }
 
-    private bool hasChanged = true;
-    private float _lastVal;
-
     public Stat(float baseValue)
     {
         BaseValue = baseValue;
         modifiers = new List<StatModifier>();
+        hasNotChanged = false;
     }
 
     public void SetBaseValue(float val)
     {
-        hasChanged = true;
+        hasNotChanged = false;
         BaseValue = val;
     }
 
     public void AddModifier(StatModifier mod)
     {
-        hasChanged = true;
+        hasNotChanged = false;
         modifiers.Add(mod);
         modifiers.Sort(CompareOrder);
     }
 
     public bool RemoveModifier(StatModifier mod)
     {
-        hasChanged = true;
+        hasNotChanged = true;
         return modifiers.Remove(mod);
     }
 
@@ -69,6 +72,11 @@ public class Stat
 
     public float CalculateValue()
     {
+        if(modifiers == null)
+        {
+            modifiers = new List<StatModifier>();
+        }
+
         float tempValue = BaseValue;
         float tempPercentAdd = 0;
 
@@ -89,12 +97,13 @@ public class Stat
 
                 if (i + 1 > modifiers.Count || modifiers[i + 1].Type != ModifierType.PercentAdd)
                 {
-                    tempValue *= 1 + tempPercentAdd;
+                    tempValue *= (1 + tempPercentAdd);
                     tempPercentAdd = 0;
                 }
             }
         }
 
+        Debug.Log("tempValue: " + tempValue);
         return (float)Math.Round(tempValue, 4);
     }
 }

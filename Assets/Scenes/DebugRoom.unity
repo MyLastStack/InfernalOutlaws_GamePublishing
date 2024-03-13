@@ -789,7 +789,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0498755974d914a479b1f80eeee9e381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStats: {fileID: 11400000, guid: 0e17177097d951f4b84026bb6a6b7b9c, type: 2}
+  basePlayerStats: {fileID: 11400000, guid: 0e17177097d951f4b84026bb6a6b7b9c, type: 2}
+  multiplicationList: []
+  additionList: []
+  ps: {fileID: 0}
   moveAction:
     m_Name: Move
     m_Type: 0
