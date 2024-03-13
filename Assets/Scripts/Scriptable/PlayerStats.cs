@@ -6,6 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerStats", menuName = "ScriptableObjects/PlayerStats", order = 1)]
 public class PlayerStats : ScriptableObject
 {
+    [Header("Modifyable Stats")]
+    [Space]
     public Stat dashTimeStat;
     public Stat dashCooldownStat;
     public Stat dashMaxMagnitudeStat;
@@ -14,11 +16,14 @@ public class PlayerStats : ScriptableObject
     public Stat jumpPowerStat;
     public Stat walkMaxMagnitudeStat;
 
+
     //Dash variables
-    public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
+    [HideInInspector] public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
     [HideInInspector] public float dashTimeLeft; //A tracker for dash time.
     [HideInInspector] public float dashCooldown { get { return dashCooldownStat.Value; } set { dashCooldownStat.SetBaseValue(value); } } //How long after a dash before the player can dash again
     [HideInInspector] public float dashCooldownTimeLeft; //A tracker for dash cooldown
+    [Header("Unmodifyable Stats")]
+    [Space]
     public float dashForce; //How much force is applied during the dash.
     [HideInInspector] public float dashMaxMagnitude { get { return dashMaxMagnitudeStat.Value; } set { dashMaxMagnitudeStat.SetBaseValue(value); } } //The max magnitude of the player during the dash.
     [HideInInspector] public float dashMoveSpeed { get { return dashMoveSpeedStat.Value; } set { dashMoveSpeedStat.SetBaseValue(value); } } //Control the player has when dashing
