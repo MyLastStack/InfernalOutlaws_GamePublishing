@@ -51,4 +51,5 @@ public static class EventManager
     public static UnityEvent<int> WaveStart = new UnityEvent<int>(); //Called when a wave starts. Int is wave num.
 
     #endregion
+
 }

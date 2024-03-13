@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5803e53d4d151824a97126be8f36b702, type: 3}
+  m_Name: PlayerStats
+  m_EditorClassIdentifier: 
+  dashTime: 0.7
+  dashTimeLeft: 0
+  dashCooldown: 1.5
+  dashCooldownTimeLeft: 0
+  dashForce: 9001
+  dashMaxMagnitude: 30
+  dashMoveSpeed: 10
+  dashDeccelRate: 1
+  dashFOV: 85
+  moveSpeed: 250
+  walkMoveSpeed: 250
+  rotateSpeed: 4
+  jumpPower: 1300
+  walkMaxMagnitude: 15
+  maxMagnitude: 15
+  deccelRate: 1.1
+  walkDeccelRate: 1.1
+  walkFOV: 60

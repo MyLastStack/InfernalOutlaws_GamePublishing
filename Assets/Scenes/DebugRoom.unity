@@ -789,6 +789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0498755974d914a479b1f80eeee9e381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerStats: {fileID: 11400000, guid: 0e17177097d951f4b84026bb6a6b7b9c, type: 2}
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -878,22 +879,6 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 55
-  dashTime: 0.7
-  dashCooldown: 1.5
-  dashForce: 9001
-  dashMaxMagnitude: 30
-  dashMoveSpeed: 10
-  dashDeccelRate: 1
-  dashFOV: 85
-  moveSpeed: 250
-  walkMoveSpeed: 250
-  rotateSpeed: 4
-  jumpPower: 1300
-  walkMaxMagnitude: 15
-  maxMagnitude: 15
-  deccelRate: 1.1
-  walkDeccelRate: 1.1
-  walkFOV: 60
   onGround: 0
   camDist: 0
   groundDist: 0.8
@@ -1605,6 +1590,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  eventType: 0
 --- !u!4 &2054495247
 Transform:
   m_ObjectHideFlags: 0
