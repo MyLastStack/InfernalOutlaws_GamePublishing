@@ -789,10 +789,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0498755974d914a479b1f80eeee9e381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basePlayerStats: {fileID: 11400000, guid: 0e17177097d951f4b84026bb6a6b7b9c, type: 2}
-  multiplicationList: []
-  additionList: []
-  ps: {fileID: 0}
+  ps:
+    dashTimeStat:
+      BaseValue: 0.7
+    dashCooldownStat:
+      BaseValue: 1.5
+    dashMaxMagnitudeStat:
+      BaseValue: 30
+    dashMoveSpeedStat:
+      BaseValue: 10
+    walkMoveSpeedStat:
+      BaseValue: 250
+    jumpPowerStat:
+      BaseValue: 1300
+    walkMaxMagnitudeStat:
+      BaseValue: 15
+    dashTimeLeft: 0
+    dashCooldownTimeLeft: 0
+    dashForce: 9001
+    dashDeccelRate: 1
+    dashFOV: 85
+    moveSpeed: 250
+    rotateSpeed: 4
+    maxMagnitude: 15
+    deccelRate: 1.1
+    walkDeccelRate: 1.1
+    walkFOV: 60
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -1253,16 +1275,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67cb0d061873e5f4392e1d08a32fcf21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.2
-  spread: 0.04
+  stats:
+    baseStats: {fileID: 11400000, guid: dcff59b8d637db449b975845506f1edd, type: 2}
+    fireRate:
+      BaseValue: 0
+    spread:
+      BaseValue: 0
+    maxAmmo:
+      BaseValue: 0
+    usesAmmo: 0
+    damage:
+      BaseValue: 0
+    range:
+      BaseValue: 0
   mask:
     serializedVersion: 2
     m_Bits: 51
   active: 1
-  maxAmmo: 5000
-  usesAmmo: 1
-  damage: 5
-  range: 55
   bulletImpact: {fileID: 5009811364744744589, guid: 93cf9dbebfcf2d34895167bb9525f93a, type: 3}
   cam: {fileID: 611051971}
   fireAction:

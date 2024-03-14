@@ -13,47 +13,76 @@ public class Stat
     private bool hasNotChanged = false;
     private float _lastVal;
 
-    public float Value
+    public float Value //The final value after modifiers
     {
         get
         {
-            Debug.Log(hasNotChanged);
-            if (!hasNotChanged)
+            if (!hasNotChanged) //Check if the item has a new modifier or not
             {
                 _lastVal = CalculateValue();
-                Debug.Log("Yo");
                 hasNotChanged = true;
             }
             return _lastVal;
         }
     }
 
-    public Stat(float baseValue)
+    public int iValue
+    {
+        get
+        {
+            return Mathf.RoundToInt(Value);
+        }
+    }
+
+    public Stat(float baseValue) //Constructor
     {
         BaseValue = baseValue;
         modifiers = new List<StatModifier>();
         hasNotChanged = false;
     }
 
+    //Changes base value of the stat. DO NOT use this to add modifiers to the stat!
     public void SetBaseValue(float val)
     {
         hasNotChanged = false;
         BaseValue = val;
     }
 
+    //Add a new modifier to the stat, additive, multiplicative, or exponential
     public void AddModifier(StatModifier mod)
     {
+        if (modifiers == null) //If the list hasn't been initialized yet
+        {
+            modifiers = new List<StatModifier>();
+        }
+
         hasNotChanged = false;
         modifiers.Add(mod);
         modifiers.Sort(CompareOrder);
     }
 
+    //Removes a modifier
     public bool RemoveModifier(StatModifier mod)
     {
+        if (modifiers == null) //If the list hasn't been initialized yet
+        {
+            modifiers = new List<StatModifier>();
+        }
+
         hasNotChanged = true;
         return modifiers.Remove(mod);
     }
 
+    public void ClearModifiers()
+    {
+        hasNotChanged = false;
+        if (modifiers != null)
+        {
+            modifiers.Clear();
+        }
+    }
+
+    //Sets the order based on the StatModifier.Order variable
     private int CompareOrder(StatModifier a, StatModifier b)
     {
         if (a.Order > b.Order)
@@ -70,9 +99,10 @@ public class Stat
         }
     }
 
+    //Calculate the final value
     public float CalculateValue()
     {
-        if(modifiers == null)
+        if (modifiers == null) //If the list hasn't been initialized yet
         {
             modifiers = new List<StatModifier>();
         }
@@ -80,22 +110,26 @@ public class Stat
         float tempValue = BaseValue;
         float tempPercentAdd = 0;
 
-        for (int i = 0; i < modifiers.Count; i++)
+        for (int i = 0; i < modifiers.Count; i++) //Go through the list and add the modifiers
         {
             var curMod = modifiers[i];
 
-            if (curMod.Type == ModifierType.Flat)
+            if (curMod.Type == ModifierType.Flat) //For flat additive modifiers (1 + 1 = 2)
             {
                 tempValue += curMod.Value;
             }
-            else if(curMod.Type == ModifierType.PercentMult)
+            else if (curMod.Type == ModifierType.PercentMult) //For exponential percent multiplication (100% + 100% = 400%)
             {
-                tempValue *= curMod.Value;
-            } else
+                tempValue *= (1 + curMod.Value);
+            }
+            else //For additive percent multiplication (100% + 100% = 200%)
             {
+                //Add to a temporary variable for additive multiplication
                 tempPercentAdd += curMod.Value;
 
-                if (i + 1 > modifiers.Count || modifiers[i + 1].Type != ModifierType.PercentAdd)
+                //Check if the value is at the end of the array or the next value is not percent add
+                //If so, apply the final calculation
+                if (i + 1 > modifiers.Count - 1 || modifiers[i + 1].Type != ModifierType.PercentAdd)
                 {
                     tempValue *= (1 + tempPercentAdd);
                     tempPercentAdd = 0;
@@ -103,25 +137,24 @@ public class Stat
             }
         }
 
-        Debug.Log("tempValue: " + tempValue);
         return (float)Math.Round(tempValue, 4);
     }
 }
 
 public class StatModifier
 {
-    public readonly float Value;
-    public ModifierType Type;
-    public int Order;
+    public readonly float Value; //The value to add/multiply by
+    public ModifierType Type; //What type of operation is it?
+    public int Order; //What order will the operation be applied in the list? (By default: 1: Flat 2: PercentAdd 3: PercentMult)
 
-    public StatModifier(float value, ModifierType type, int order)
+    public StatModifier(float value, ModifierType type, int order) //Constructor
     {
         Value = value;
         Type = type;
         Order = order;
     }
 
-    public StatModifier(float value, ModifierType type) : this(value, type, (int)type) { }
+    public StatModifier(float value, ModifierType type) : this(value, type, (int)type) { } //Overload constructor that defaults the order
 }
 
 public enum ModifierType
