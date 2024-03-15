@@ -10,10 +10,14 @@ using static EventManager;
 public abstract class Card
 {
     public const string CARD_ASSET_PATH = "ScriptableObjects/Cards/";
+    public readonly string cardName;
     
     public int stacks = 1;
 
-    public abstract CardStats GetStats();
+    public virtual CardStats GetStats()
+    {
+        return Resources.Load<CardStats>(CARD_ASSET_PATH + cardName);
+    }
 
     public virtual void CallCard(PlayerController player, int stacks)
     {
@@ -31,17 +35,41 @@ public abstract class Card
     }
 }
 
+#region Templates
 
-#region Items 
+public class PassiveTemplate : Card
+{
+    new readonly string cardName = "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+
+    public override void CallCard(PlayerController player, int stacks)
+    {
+        //Perform your functionality here
+    }
+}
+
+public class TriggeredTemplate : Card
+{
+    new readonly string cardName = "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+
+    public void CallCard(/*Enter Parameters for whatever event you're listening to*/)
+    {
+        //Perform your functionality here
+    }
+
+    public override void SubscribeEvent()
+    {
+        //Write the AddListener for your event here and hook it up to CallCard
+    }
+}
+
+#endregion
+
+
+#region Cards
 
 public class TestCard : Card
 {
-    string cardName = "TestCard";
-
-    public override CardStats GetStats()
-    {
-        return Resources.Load<CardStats>(CARD_ASSET_PATH + cardName);
-    }
+    new readonly string cardName = "TestCard";
 
     public void CallCard(GameObject player)
     {
