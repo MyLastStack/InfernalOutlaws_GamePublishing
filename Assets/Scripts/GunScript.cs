@@ -1,26 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager; //So so I don't have to repeat eventmanager over and over again
+using Random = UnityEngine.Random;
 
 public class GunScript : MonoBehaviour
 {
-    //Firerate variables
-    public float fireRate;
-    float timeStamp = 0;
-    public float spread;
-
-    //Gun variables
+    public GunStats stats;
     public LayerMask mask;
     public bool active;
-    public int maxAmmo;
     int ammo;
-    public bool usesAmmo;
-    public float damage;
-    public float range;
 
     //Components
+    Timer timer;
     public GameObject bulletImpact;
     //public GameObject muzzleFlash;
     //public GameObject muzzleFlashPosition;
@@ -30,29 +24,37 @@ public class GunScript : MonoBehaviour
 
     private void Awake()
     {
+        stats.SetStats();
         //src = GetComponent<AudioSource>();
-        ammo = maxAmmo;
+        ammo = stats.maxAmmo.iValue;
+        timer = new Timer(1f / stats.fireRate.Value);
     }
 
     private void Update()
     {
+
+        timer.Tick(Time.deltaTime);
         //Okay, to prevent a bunch of layered if statements I put this all in one If statement, in total what it's checking is
         //Is the fire button pressed?
         //Is its firerate cooldown done?
         //Is it active?
         //Does it use ammo? If so, does it have any left?
         //Is the game unpaused?
-        if (fireAction.IsPressed() && timeStamp + fireRate < Time.time && active && (usesAmmo && ammo > 0 || !usesAmmo) && Time.timeScale > 0)
+        if (fireAction.IsPressed() && timer.IsDone() && active && (stats.usesAmmo && ammo > 0 || !stats.usesAmmo) && Time.timeScale > 0)
         {
+            timer.Reset();
+            timer.SetMaxTime(stats.fireRate.Value);
             GunFired.Invoke(this);
 
-            timeStamp = Time.time;
             //src.Play();
 
             //Create ray to point towards
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-            ray.direction += new Vector3(Random.Range(-spread, spread), Random.Range(-spread, spread), Random.Range(-spread, spread));
+            ray.direction += new Vector3
+                (Random.Range(-stats.spread.Value, stats.spread.Value), 
+                Random.Range(-stats.spread.Value, stats.spread.Value), 
+                Random.Range(-stats.spread.Value, stats.spread.Value));
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
             {
@@ -69,14 +71,14 @@ public class GunScript : MonoBehaviour
                 if (healthScript != null)
                 {
                     //Invoke events
-                    GenericHitEntity.Invoke(hitEntity, damage);
+                    GenericHitEntity.Invoke(hitEntity, stats.damage.Value);
                     if(healthScript.type == EntityType.Enemy)
                     {
-                        GenericHitEnemy.Invoke(hitEntity, damage);
-                        BulletHitEnemy.Invoke(this, hitEntity, damage);
+                        GenericHitEnemy.Invoke(hitEntity, stats.damage.Value);
+                        BulletHitEnemy.Invoke(this, hitEntity, stats.damage.Value);
                     }
 
-                    healthScript.health -= damage;
+                    healthScript.health -= stats.damage.Value;
                 }
             }
             else //If it doesn't hit anything
@@ -90,7 +92,7 @@ public class GunScript : MonoBehaviour
             //muzzleFlashInstance.transform.rotation = transform.rotation;
 
             //Remove ammo
-            if (usesAmmo)
+            if (stats.usesAmmo)
             {
                 ammo -= 1;
             }
@@ -105,5 +107,31 @@ public class GunScript : MonoBehaviour
     private void OnDisable()
     {
         fireAction.Disable();
+    }
+}
+
+[Serializable]
+public class GunStats
+{
+    public GunScriptable baseStats;
+
+    //Firerate variables
+    [HideInInspector] public Stat fireRate;
+    [HideInInspector] public Stat spread;
+
+    //Gun variables
+    [HideInInspector] public Stat maxAmmo;
+    [HideInInspector] public bool usesAmmo;
+    [HideInInspector] public Stat damage;
+    [HideInInspector] public Stat range;
+
+    public void SetStats()
+    {
+        fireRate = new Stat(baseStats.fireRate);
+        spread = new Stat(baseStats.spread);
+        maxAmmo = new Stat(baseStats.maxAmmo);
+        usesAmmo = baseStats.usesAmmo;
+        damage = new Stat(baseStats.damage);
+        range = new Stat(baseStats.range);
     }
 }
