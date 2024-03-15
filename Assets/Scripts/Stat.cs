@@ -17,7 +17,6 @@ public class Stat
     {
         get
         {
-            Debug.Log(hasNotChanged);
             if (!hasNotChanged)
             {
                 _lastVal = CalculateValue();

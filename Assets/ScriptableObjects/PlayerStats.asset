@@ -25,9 +25,9 @@ MonoBehaviour:
   jumpPowerStat:
     BaseValue: 1300
   walkMaxMagnitudeStat:
-    BaseValue: 30
-  dashTimeLeft: -0.0031983457
-  dashCooldownTimeLeft: -0.0048752083
+    BaseValue: 15
+  dashTimeLeft: -0.0025620437
+  dashCooldownTimeLeft: -0.0007876761
   dashForce: 9001
   dashDeccelRate: 1
   dashFOV: 85
