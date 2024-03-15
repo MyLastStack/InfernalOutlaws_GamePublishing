@@ -10,7 +10,7 @@ using static EventManager;
 public abstract class Card
 {
     public const string CARD_ASSET_PATH = "ScriptableObjects/Cards/";
-    public readonly string cardName;
+    public virtual string cardName { get; }
     
     public int stacks = 1;
 
@@ -39,7 +39,7 @@ public abstract class Card
 
 public class PassiveTemplate : Card
 {
-    new readonly string cardName = "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+    public override string cardName => "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
 
     public override void CallCard(PlayerController player, int stacks)
     {
@@ -49,7 +49,7 @@ public class PassiveTemplate : Card
 
 public class TriggeredTemplate : Card
 {
-    new readonly string cardName = "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+    public override string cardName => "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
 
     public void CallCard(/*Enter Parameters for whatever event you're listening to*/)
     {
@@ -69,7 +69,7 @@ public class TriggeredTemplate : Card
 
 public class TestCard : Card
 {
-    new readonly string cardName = "TestCard";
+    public override string cardName => "TestCard";
 
     public void CallCard(GameObject player)
     {
