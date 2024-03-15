@@ -28,8 +28,6 @@ public class GunScript : MonoBehaviour
         //src = GetComponent<AudioSource>();
         ammo = stats.maxAmmo.iValue;
         timer = new Timer(1f / stats.fireRate.Value);
-
-        Debug.Log(stats.fireRate.Value);
     }
 
     private void Update()

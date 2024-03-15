@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
 {
     public PlayerStats ps; //I gave it a simple name because it appears EVERYWHERE in the code
 
+
+    public List<Card> cards = new List<Card>(); //Replace this later
+
     //Inputs
     public InputAction moveAction;
     public InputAction jumpAction;
@@ -46,14 +49,29 @@ public class PlayerController : MonoBehaviour
         targetXRotation = camPivot.transform.localRotation.x;
         targetYRotation = camPivot.transform.localRotation.y;
         Physics.gravity *= 4;
+
+
+        //Testing cards
+        TestCard test = new TestCard();
+
+        cards.Add(test);
+
+        foreach (Card card in cards)
+        {
+            if (card.GetStats().cardType == CardType.Triggered)
+            {
+                card.SubscribeEvent();
+            }
+        }
     }
 
     void Update()
     {
+        Debug.Log(ps.walkMoveSpeed);
 
         var onGroundLastFrame = onGround;
         onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
-        if(!onGroundLastFrame && onGround)
+        if (!onGroundLastFrame && onGround)
         {
             Land.Invoke(gameObject);
             //Play landing sound here
@@ -102,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (ps.dashTimeLeft > 0)
         {
             ps.dashTimeLeft -= Time.deltaTime;
-            if(cam.fieldOfView < ps.dashFOV)
+            if (cam.fieldOfView < ps.dashFOV)
             {
                 cam.fieldOfView += FOVChangeRate * Time.deltaTime;
             }

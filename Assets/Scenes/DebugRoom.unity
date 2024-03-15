@@ -815,6 +815,7 @@ MonoBehaviour:
     deccelRate: 1.1
     walkDeccelRate: 1.1
     walkFOV: 60
+  testStats: {fileID: 0}
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -1603,25 +1604,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff13e1edc729d954189f67fc5b717610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card:
-    Name: 
-    Quantity: 5000
-    Type: 0
-    TriggeredFunction:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2054495246}
-          m_TargetAssemblyTypeName: CardSystem, Assembly-CSharp
-          m_MethodName: Heal
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
   eventType: 0
 --- !u!4 &2054495247
 Transform:

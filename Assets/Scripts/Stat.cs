@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -17,7 +18,6 @@ public class Stat
     {
         get
         {
-
             if (!hasNotChanged) //Check if the item has a new modifier or not
             {
                 _lastVal = CalculateValue();
@@ -58,6 +58,9 @@ public class Stat
         }
 
         hasNotChanged = false;
+
+        modifiers.RemoveAll(x => x.Source == mod.Source); //Remove any existing modifiers from the same source first
+
         modifiers.Add(mod);
         modifiers.Sort(CompareOrder);
     }
@@ -147,15 +150,17 @@ public class StatModifier
     public readonly float Value; //The value to add/multiply by
     public ModifierType Type; //What type of operation is it?
     public int Order; //What order will the operation be applied in the list? (By default: 1: Flat 2: PercentAdd 3: PercentMult)
+    public string Source; //What created this modifier?
 
-    public StatModifier(float value, ModifierType type, int order) //Constructor
+    public StatModifier(float value, ModifierType type, int order, string source) //Constructor
     {
         Value = value;
         Type = type;
         Order = order;
+        Source = source;
     }
 
-    public StatModifier(float value, ModifierType type) : this(value, type, (int)type) { } //Overload constructor that defaults the order
+    public StatModifier(float value, ModifierType type, string source) : this(value, type, (int)type, source) { } //Overload constructor that defaults the order
 }
 
 public enum ModifierType
