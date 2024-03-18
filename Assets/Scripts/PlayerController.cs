@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
@@ -7,6 +8,11 @@ using static EventManager;
 
 public class PlayerController : MonoBehaviour
 {
+    public PlayerStats ps; //I gave it a simple name because it appears EVERYWHERE in the code
+
+
+    public List<Card> cards = new List<Card>(); //Replace this later
+
     //Inputs
     public InputAction moveAction;
     public InputAction jumpAction;
@@ -21,28 +27,6 @@ public class PlayerController : MonoBehaviour
     public LayerMask layerMask; //What objects the camera can move through, again only applies to third person
     //public AudioSource landSrc;
     //public AudioSource walkSrc;
-
-    //Dash variables
-    public float dashTime; //How long does the dash last
-    float dashTimeLeft; //A tracker for dash time.
-    public float dashCooldown; //How long after a dash before the player can dash again
-    float dashCooldownTimeLeft; //A tracker for dash cooldown
-    public float dashForce; //How much force is applied during the dash.
-    public float dashMaxMagnitude; //The max magnitude of the player during the dash.
-    public float dashMoveSpeed; //Control the player has when dashing
-    public float dashDeccelRate = 1.05f; //DeccelRate during dash
-    public float dashFOV; //Camera FOV during dash
-
-    //Movement Variables
-    public float moveSpeed; //The speed at which the player accelerates
-    public float walkMoveSpeed; //Control the player has when walking
-    public float rotateSpeed; //Camera sensitivity
-    public float jumpPower; //How much force is applied during a jump
-    public float walkMaxMagnitude; //Max magnitude while not dashing
-    public float maxMagnitude; //The max speed the player can move at
-    public float deccelRate = 1.1f; //Essentially simulated friction, the rate the player deccelerates when not moving in a given direction
-    public float walkDeccelRate = 1.1f; //Deccel rate during walk
-    public float walkFOV = 60;
 
     //Other variables
     float targetXRotation; //These two variables are used for camera rotation clamping purposes
@@ -60,17 +44,34 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        ps.Clear();
         rb = GetComponent<Rigidbody>();
         targetXRotation = camPivot.transform.localRotation.x;
         targetYRotation = camPivot.transform.localRotation.y;
         Physics.gravity *= 4;
+
+
+        //Testing cards
+        TestCard test = new TestCard();
+
+        cards.Add(test);
+
+        foreach (Card card in cards)
+        {
+            if (card.GetStats().cardType == CardType.Triggered)
+            {
+                card.SubscribeEvent();
+            }
+        }
     }
 
     void Update()
     {
+        Debug.Log(ps.walkMoveSpeed);
+
         var onGroundLastFrame = onGround;
         onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
-        if(!onGroundLastFrame && onGround)
+        if (!onGroundLastFrame && onGround)
         {
             Land.Invoke(gameObject);
             //Play landing sound here
@@ -80,8 +81,8 @@ public class PlayerController : MonoBehaviour
             moveValue = moveAction.ReadValue<Vector2>();
 
             //Handle rotation
-            targetXRotation -= Input.GetAxis("Mouse Y") * rotateSpeed;
-            targetYRotation += Input.GetAxis("Mouse X") * rotateSpeed;
+            targetXRotation -= Input.GetAxis("Mouse Y") * ps.rotateSpeed;
+            targetYRotation += Input.GetAxis("Mouse X") * ps.rotateSpeed;
             targetXRotation = Mathf.Clamp(targetXRotation, -90, 90);
 
             camPivot.transform.eulerAngles = new Vector3(targetXRotation, camPivot.transform.eulerAngles.y, camPivot.transform.eulerAngles.z);
@@ -116,77 +117,78 @@ public class PlayerController : MonoBehaviour
         //}
 
         //Count down dash timers
-        if (dashTimeLeft > 0)
+        if (ps.dashTimeLeft > 0)
         {
-            dashTimeLeft -= Time.deltaTime;
-            if(cam.fieldOfView < dashFOV)
+            ps.dashTimeLeft -= Time.deltaTime;
+            if (cam.fieldOfView < ps.dashFOV)
             {
                 cam.fieldOfView += FOVChangeRate * Time.deltaTime;
             }
         }
         else
         {
-            maxMagnitude = walkMaxMagnitude;
-            moveSpeed = walkMoveSpeed;
-            deccelRate = walkDeccelRate;
-            if (cam.fieldOfView > walkFOV)
+            ps.maxMagnitude = ps.walkMaxMagnitude;
+            ps.moveSpeed = ps.walkMoveSpeed;
+            ps.deccelRate = ps.walkDeccelRate;
+            if (cam.fieldOfView > ps.walkFOV)
             {
                 cam.fieldOfView -= FOVChangeRate * Time.deltaTime;
             }
         }
 
-        if (dashCooldownTimeLeft > 0)
+        if (ps.dashCooldownTimeLeft > 0)
         {
-            dashCooldownTimeLeft -= Time.deltaTime;
+            ps.dashCooldownTimeLeft -= Time.deltaTime;
         }
+
     }
 
     private void FixedUpdate()
     {
         Movement();
 
-        if (dashAction.IsPressed() && hasControl && dashCooldownTimeLeft <= 0)
+        if (dashAction.IsPressed() && hasControl && ps.dashCooldownTimeLeft <= 0)
         {
             PlayerDash.Invoke(gameObject);
-            maxMagnitude = dashMaxMagnitude;
-            rb.AddForce(transform.forward * dashForce);
-            dashTimeLeft = dashTime;
-            dashCooldownTimeLeft = dashCooldown;
-            moveSpeed = dashMoveSpeed;
-            deccelRate = dashDeccelRate;
+            ps.maxMagnitude = ps.dashMaxMagnitude;
+            rb.AddForce(transform.forward * ps.dashForce);
+            ps.dashTimeLeft = ps.dashTime;
+            ps.dashCooldownTimeLeft = ps.dashCooldown;
+            ps.moveSpeed = ps.dashMoveSpeed;
+            ps.deccelRate = ps.dashDeccelRate;
         }
 
         if (jumpAction.IsPressed() && onGround && hasControl)
         {
             Jump.Invoke(gameObject);
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            rb.AddForce(jumpPower * Vector3.up);
+            rb.AddForce(ps.jumpPower * Vector3.up);
         }
     }
 
     public void Movement()
     {
         //First, apply the force
-        rb.AddRelativeForce(new Vector3(moveValue.x * moveSpeed, 0, moveValue.y * moveSpeed));
+        rb.AddRelativeForce(new Vector3(moveValue.x * ps.moveSpeed, 0, moveValue.y * ps.moveSpeed));
 
         if (moveValue.x == 0)
         {
             //This dampens x velocity when left and right aren't held. It first converts to local velocity, reduces it, then converts it back to global velocity.
             var localVelocity = transform.InverseTransformDirection(rb.velocity);
-            localVelocity = new Vector3(localVelocity.x / deccelRate, localVelocity.y, localVelocity.z);
+            localVelocity = new Vector3(localVelocity.x / ps.deccelRate, localVelocity.y, localVelocity.z);
             rb.velocity = transform.TransformDirection(localVelocity);
         }
         if (moveValue.y == 0)
         {
             //This does the same but for z velocity
             var localVelocity = transform.InverseTransformDirection(rb.velocity);
-            localVelocity = new Vector3(localVelocity.x, localVelocity.y, localVelocity.z / deccelRate);
+            localVelocity = new Vector3(localVelocity.x, localVelocity.y, localVelocity.z / ps.deccelRate);
             rb.velocity = transform.TransformDirection(localVelocity);
         }
-        if (new Vector2(rb.velocity.x, rb.velocity.z).magnitude > maxMagnitude)
+        if (new Vector2(rb.velocity.x, rb.velocity.z).magnitude > ps.maxMagnitude)
         {
             //Finally, it clamps the magnitude of the velocity so that the player doesn't accelerate to infinity
-            var clampedVelocity = Vector2.ClampMagnitude(new Vector2(rb.velocity.x, rb.velocity.z), maxMagnitude);
+            var clampedVelocity = Vector2.ClampMagnitude(new Vector2(rb.velocity.x, rb.velocity.z), ps.maxMagnitude);
             rb.velocity = new Vector3(clampedVelocity.x, rb.velocity.y, clampedVelocity.y);
         }
     }
@@ -208,4 +210,55 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+}
+
+//Player Stats
+[Serializable]
+public class PlayerStats
+{
+    [Header("Modifyable Stats")]
+    [Space]
+    public Stat dashTimeStat;
+    public Stat dashCooldownStat;
+    public Stat dashMaxMagnitudeStat;
+    public Stat dashMoveSpeedStat;
+    public Stat walkMoveSpeedStat;
+    public Stat jumpPowerStat;
+    public Stat walkMaxMagnitudeStat;
+
+
+    //Dash variables
+    [HideInInspector] public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
+    [HideInInspector] public float dashTimeLeft; //A tracker for dash time.
+    [HideInInspector] public float dashCooldown { get { return dashCooldownStat.Value; } set { dashCooldownStat.SetBaseValue(value); } } //How long after a dash before the player can dash again
+    [HideInInspector] public float dashCooldownTimeLeft; //A tracker for dash cooldown
+    [Header("Unmodifyable Stats")]
+    [Space]
+    public float dashForce; //How much force is applied during the dash.
+    [HideInInspector] public float dashMaxMagnitude { get { return dashMaxMagnitudeStat.Value; } set { dashMaxMagnitudeStat.SetBaseValue(value); } } //The max magnitude of the player during the dash.
+    [HideInInspector] public float dashMoveSpeed { get { return dashMoveSpeedStat.Value; } set { dashMoveSpeedStat.SetBaseValue(value); } } //Control the player has when dashing
+    public float dashDeccelRate = 1.05f; //DeccelRate during dash
+    public float dashFOV; //Camera FOV during dash
+
+    //Movement Variables
+    public float moveSpeed; //The speed at which the player accelerates (modified by walk and dash move speed)
+    [HideInInspector] public float walkMoveSpeed { get { return walkMoveSpeedStat.Value; } set { walkMoveSpeedStat.SetBaseValue(value); } } //Control the player has when walking
+    public float rotateSpeed; //Camera sensitivity
+    [HideInInspector] public float jumpPower { get { return jumpPowerStat.Value; } set { jumpPowerStat.SetBaseValue(value); } } //How much force is applied during a jump
+    [HideInInspector] public float walkMaxMagnitude { get { return walkMaxMagnitudeStat.Value; } set { walkMaxMagnitudeStat.SetBaseValue(value); } } //Max magnitude while not dashing
+    public float maxMagnitude; //The max speed the player can move at (modified by walk max magnitude and dash max magnitude)
+    public float deccelRate = 1.1f; //Essentially simulated friction, the rate the player deccelerates when not moving in a given direction
+    public float walkDeccelRate = 1.1f; //Deccel rate during walk
+    public float walkFOV = 60;
+
+    public void Clear()
+    {
+        dashTimeStat.ClearModifiers();
+        dashCooldownStat.ClearModifiers();
+        dashMaxMagnitudeStat.ClearModifiers();
+        dashMoveSpeedStat.ClearModifiers();
+        walkMoveSpeedStat.ClearModifiers();
+        jumpPowerStat.ClearModifiers();
+        walkMaxMagnitudeStat.ClearModifiers();
+    }
 }

@@ -52,6 +52,11 @@ public class Timer
         timeLeft = time;
     }
 
+    public void SetMaxTime(float time)
+    {
+        maxTime = maxTime;
+    }
+
     public void Reset()
     {
         timeLeft = maxTime;
