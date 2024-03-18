@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/*
 public class HitScanGun : MonoBehaviour
 {
     [Header("References")]
@@ -85,4 +86,4 @@ public class HitScanGun : MonoBehaviour
         fireAction.Disable();
         reloadAction.Disable();
     }
-}
+} */
