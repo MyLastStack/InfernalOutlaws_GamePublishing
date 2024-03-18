@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: ff736524efdf383409d23ab15f4a7fd1, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -815,7 +815,6 @@ MonoBehaviour:
     deccelRate: 1.1
     walkDeccelRate: 1.1
     walkFOV: 60
-  testStats: {fileID: 0}
   moveAction:
     m_Name: Move
     m_Type: 0
