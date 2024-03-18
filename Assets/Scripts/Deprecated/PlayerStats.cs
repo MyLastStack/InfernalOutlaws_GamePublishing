@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/*
 public class PlayerStats : MonoBehaviour
 {
     [Header("Player Stats")]
@@ -36,3 +37,4 @@ public class PlayerStats : MonoBehaviour
         ammoCount.text = $"{currentAmmoCount}";
     }
 }
+*/
