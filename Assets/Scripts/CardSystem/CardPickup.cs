@@ -37,6 +37,12 @@ public class CardPickup : MonoBehaviour
             case Cards.TwoOfBullets:
                 cardScript = new TwoOfBullets();
                 break;
+            case Cards.AceOfBoots:
+                cardScript = new AceOfBoots();
+                break;
+            case Cards.OutlawOfBullets:
+                cardScript = new OutlawOfBullets();
+                break;
         }
     }
 

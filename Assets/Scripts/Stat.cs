@@ -73,8 +73,19 @@ public class Stat
             modifiers = new List<StatModifier>();
         }
 
-        hasNotChanged = true;
+        hasNotChanged = false;
         return modifiers.Remove(mod);
+    }
+
+    public bool RemoveModifier(string source)
+    {
+        if (modifiers == null)
+        {
+            modifiers = new List<StatModifier>();
+        }
+
+        hasNotChanged = false;
+        return modifiers.RemoveAll(x => x.Source == source) > 0;
     }
 
     public void ClearModifiers()

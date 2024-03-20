@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public Timer dashCooldownTimer;
 
     public GunScript gun; //For the purpose of referencing in cards
+    public bool isDashing = false;
 
 
     //public float walkIncrements = 0.8f;
@@ -126,6 +127,11 @@ public class PlayerController : MonoBehaviour
             if (cam.fieldOfView > ps.walkFOV)
             {
                 cam.fieldOfView -= FOVChangeRate * Time.deltaTime;
+                if(isDashing)
+                {
+                    isDashing = false;
+                    PlayerDashEnd.Invoke(gameObject);
+                }
             }
         }
 
@@ -142,6 +148,7 @@ public class PlayerController : MonoBehaviour
 
         if (dashAction.IsPressed() && hasControl && dashCooldownTimer.IsDone())
         {
+            isDashing = true;
             PlayerDash.Invoke(gameObject);
             ps.maxMagnitude = ps.dashMaxMagnitude;
             rb.AddForce(transform.forward * ps.dashForce);
