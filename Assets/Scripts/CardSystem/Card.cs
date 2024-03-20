@@ -6,6 +6,9 @@ using UnityEditor;
 using UnityEngine;
 using static EventManager;
 
+/// <summary>
+/// A class that handles the functionality of cards in the game
+/// </summary>
 [Serializable]
 public abstract class Card
 {
@@ -19,7 +22,7 @@ public abstract class Card
         return Resources.Load<CardStats>(CARD_ASSET_PATH + cardName);
     }
 
-    public virtual void CallCard(PlayerController player, int stacks)
+    public virtual void CallCard(PlayerController player)
     {
         //This method is for when the card actually triggers its effect
     }
@@ -41,7 +44,7 @@ public class PassiveTemplate : Card
 {
     public override string cardName => "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
 
-    public override void CallCard(PlayerController player, int stacks)
+    public override void CallCard(PlayerController player)
     {
         //Perform your functionality here
     }
@@ -64,8 +67,22 @@ public class TriggeredTemplate : Card
 
 #endregion
 
+#region Passive Cards
 
-#region Cards
+public class TwoOfBullets : Card
+{
+    public override string cardName => "Two of Bullets";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.15f + (0.1f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.fireRate.AddModifier(modifier);
+    }
+}
+
+#endregion
+
+#region Triggered Cards
 
 public class TestCard : Card
 {
@@ -86,3 +103,9 @@ public class TestCard : Card
 }
 
 #endregion
+
+public enum Cards //After making a card, make sure to add its name to this list
+{
+    TestCard,
+    TwoOfBullets
+}

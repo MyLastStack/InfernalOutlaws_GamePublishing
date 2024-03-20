@@ -52,4 +52,8 @@ public static class EventManager
 
     #endregion
 
+
+
+    //Non-card related
+    public static UnityEvent<Card> AddCard = new UnityEvent<Card>();
 }
