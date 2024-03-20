@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        ps.Clear();
+        MouseLocker.Lock();
         rb = GetComponent<Rigidbody>();
         targetXRotation = camPivot.transform.localRotation.x;
         targetYRotation = camPivot.transform.localRotation.y;
@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
         dashTimer.SetTime(0);
         dashCooldownTimer = new Timer(ps.dashCooldown);
         dashCooldownTimer.SetTime(0);
+        ps.health = ps.maxHealth;
+        ps.shield = ps.maxShield;
     }
 
     void Update()
@@ -228,7 +230,11 @@ public class PlayerStats
     public Stat maxHealthStat;
     public Stat maxShieldStat;
     public Stat shieldCooldownStat;
+    public Stat shieldRegenSpeedStat;
 
+
+    //The Hide in Inspector variables are mostly here to save me some re-coding, as they are just references to the stats above
+    //The non-hide in inspector variables are variables that do not have a stat attached to them, meaning they cannot have modifiers applied to them.
 
     //Dash variables
     [HideInInspector] public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
@@ -258,15 +264,16 @@ public class PlayerStats
     [HideInInspector] public float shield;
     [HideInInspector] public float maxShield { get { return maxShieldStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
     [HideInInspector] public float shieldCooldown { get { return shieldCooldownStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
+    [HideInInspector] public float shieldRegenSpeed { get { return shieldRegenSpeedStat.Value; } set { shieldRegenSpeedStat.SetBaseValue (value); } }
 
-    public void Clear() //WARNING: Will reset all item stat modifications!
-    {
-        dashTimeStat.ClearModifiers();
-        dashCooldownStat.ClearModifiers();
-        dashMaxMagnitudeStat.ClearModifiers();
-        dashMoveSpeedStat.ClearModifiers();
-        walkMoveSpeedStat.ClearModifiers();
-        jumpPowerStat.ClearModifiers();
-        walkMaxMagnitudeStat.ClearModifiers();
-    }
+    //public void Clear() //WARNING: Will reset all item stat modifications!
+    //{
+    //    dashTimeStat.ClearModifiers();
+    //    dashCooldownStat.ClearModifiers();
+    //    dashMaxMagnitudeStat.ClearModifiers();
+    //    dashMoveSpeedStat.ClearModifiers();
+    //    walkMoveSpeedStat.ClearModifiers();
+    //    jumpPowerStat.ClearModifiers();
+    //    walkMaxMagnitudeStat.ClearModifiers();
+    //}
 }
