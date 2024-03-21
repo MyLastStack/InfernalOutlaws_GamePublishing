@@ -1308,7 +1308,7 @@ MonoBehaviour:
     shieldCooldownStat:
       BaseValue: 5
     shieldRegenSpeedStat:
-      BaseValue: 0
+      BaseValue: 2
     dashForce: 9001
     dashDeccelRate: 1
     dashFOV: 85
@@ -2626,6 +2626,14 @@ PrefabInstance:
       propertyPath: m_BaseOffset
       value: 0.75
       objectReference: {fileID: 0}
+    - target: {fileID: 1690608801559561621, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+      propertyPath: attack
+      value: 
+      objectReference: {fileID: 2048471014}
+    - target: {fileID: 1690608801559561621, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2315266162098262449, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.3964853
@@ -2670,11 +2678,40 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 5144847062834742423, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5684753499671503709, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.84545
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5144847062834742423, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2048471014}
   m_SourcePrefab: {fileID: 100100000, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+--- !u!1 &2048471013 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5144847062834742423, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+  m_PrefabInstance: {fileID: 2048471012}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2048471014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048471013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8002f838a89e4004d916769edab9b102, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &2054495245
 GameObject:
   m_ObjectHideFlags: 0

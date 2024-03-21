@@ -18,8 +18,12 @@ public class EnemyBehaviour : MonoBehaviour
     public float attackDuration;
     Timer attackDurationTimer;
 
+    public float damage;
+    public EnemyAttack attack;
+
     private void Start()
     {
+        attack.damage = damage;
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
 
