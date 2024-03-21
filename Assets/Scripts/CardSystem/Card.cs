@@ -1,11 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
 using UnityEngine;
 using static EventManager;
 
+/// <summary>
+/// A class that handles the functionality of cards in the game
+/// </summary>
 [Serializable]
 public abstract class Card
 {
@@ -19,7 +23,7 @@ public abstract class Card
         return Resources.Load<CardStats>(CARD_ASSET_PATH + cardName);
     }
 
-    public virtual void CallCard(PlayerController player, int stacks)
+    public virtual void CallCard(PlayerController player)
     {
         //This method is for when the card actually triggers its effect
     }
@@ -41,7 +45,7 @@ public class PassiveTemplate : Card
 {
     public override string cardName => "EnterNameHere"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
 
-    public override void CallCard(PlayerController player, int stacks)
+    public override void CallCard(PlayerController player)
     {
         //Perform your functionality here
     }
@@ -64,8 +68,33 @@ public class TriggeredTemplate : Card
 
 #endregion
 
+#region Passive Cards
 
-#region Cards
+public class TwoOfBullets : Card
+{
+    public override string cardName => "Two of Bullets";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.15f + (0.1f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.fireRate.AddModifier(modifier);
+    }
+}
+
+public class AceOfBoots : Card
+{
+    public override string cardName => "Ace of Boots"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.15f + (0.08f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.ps.jumpPowerStat.AddModifier(modifier);
+    }
+}
+
+#endregion
+
+#region Triggered Cards
 
 public class TestCard : Card
 {
@@ -73,6 +102,7 @@ public class TestCard : Card
 
     public void CallCard(GameObject player)
     {
+        //Apply modifiers when the event is triggered
         PlayerController controller = player.GetComponent<PlayerController>();
         StatModifier modifier = new StatModifier(0.15f + (0.08f * (stacks - 1)), ModifierType.PercentAdd, cardName);
         controller.ps.walkMaxMagnitudeStat.AddModifier(modifier);
@@ -81,8 +111,41 @@ public class TestCard : Card
 
     public override void SubscribeEvent()
     {
+        //Register the event to listen for
         Jump.AddListener(CallCard);
     }
 }
 
+public class OutlawOfBullets : Card
+{
+    public override string cardName => "Outlaw of Bullets"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+
+    public void CallCard(GameObject obj)
+    {
+        PlayerController player = obj.GetComponent<PlayerController>();
+        StatModifier modifier = new StatModifier(0.30f + (0.15f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.fireRate.AddModifier(modifier);
+    }
+
+    public void EndEffect(GameObject obj)
+    {
+        PlayerController player = obj.GetComponent<PlayerController>();
+        player.gun.stats.fireRate.RemoveModifier(cardName);
+    }
+
+    public override void SubscribeEvent()
+    {
+        PlayerDash.AddListener(CallCard);
+        PlayerDashEnd.AddListener(EndEffect);
+    }
+}
+
 #endregion
+
+public enum Cards //After making a card, make sure to add its name to this list
+{
+    TestCard,
+    TwoOfBullets,
+    AceOfBoots,
+    OutlawOfBullets
+}

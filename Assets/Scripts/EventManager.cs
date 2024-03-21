@@ -39,6 +39,7 @@ public static class EventManager
     public static UnityEvent<GameObject> Land = new UnityEvent<GameObject>(); //Called when the player lands on the ground
     public static UnityEvent<GameObject> PlayerDeath = new UnityEvent<GameObject>(); //Called when the player would die
     public static UnityEvent<GameObject> PlayerDash = new UnityEvent<GameObject>(); //Called when the player dashes
+    public static UnityEvent<GameObject> PlayerDashEnd = new UnityEvent<GameObject>();
 
     #endregion
 
@@ -52,4 +53,8 @@ public static class EventManager
 
     #endregion
 
+
+
+    //Non-card related
+    public static UnityEvent<Card> AddCard = new UnityEvent<Card>();
 }

@@ -32,6 +32,12 @@ public class GunScript : MonoBehaviour
 
     private void Update()
     {
+        #region Place stat tracking debugs here
+
+        Debug.Log(stats.fireRate.Value);
+
+        #endregion
+
 
         timer.Tick(Time.deltaTime);
         //Okay, to prevent a bunch of layered if statements I put this all in one If statement, in total what it's checking is
@@ -43,7 +49,7 @@ public class GunScript : MonoBehaviour
         if (fireAction.IsPressed() && timer.IsDone() && active && (stats.usesAmmo && ammo > 0 || !stats.usesAmmo) && Time.timeScale > 0)
         {
             timer.Reset();
-            timer.SetMaxTime(stats.fireRate.Value);
+            timer.SetMaxTime(1f / stats.fireRate.Value);
             GunFired.Invoke(this);
 
             //src.Play();
@@ -52,8 +58,8 @@ public class GunScript : MonoBehaviour
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             ray.direction += new Vector3
-                (Random.Range(-stats.spread.Value, stats.spread.Value), 
-                Random.Range(-stats.spread.Value, stats.spread.Value), 
+                (Random.Range(-stats.spread.Value, stats.spread.Value),
+                Random.Range(-stats.spread.Value, stats.spread.Value),
                 Random.Range(-stats.spread.Value, stats.spread.Value));
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
@@ -72,7 +78,7 @@ public class GunScript : MonoBehaviour
                 {
                     //Invoke events
                     GenericHitEntity.Invoke(hitEntity, stats.damage.Value);
-                    if(healthScript.type == EntityType.Enemy)
+                    if (healthScript.type == EntityType.Enemy)
                     {
                         GenericHitEnemy.Invoke(hitEntity, stats.damage.Value);
                         BulletHitEnemy.Invoke(this, hitEntity, stats.damage.Value);

@@ -37,38 +37,34 @@ public class PlayerController : MonoBehaviour
     public bool hasControl = true;
     public float FOVChangeRate;
 
+    public Timer dashTimer;
+    public Timer dashCooldownTimer;
+
+    public GunScript gun; //For the purpose of referencing in cards
+    public bool isDashing = false;
 
 
-    public float walkIncrements = 0.8f;
-    float walkTime = 0.5f;
+    //public float walkIncrements = 0.8f;
+    //float walkTime = 0.5f;
 
     void Start()
     {
-        ps.Clear();
+        MouseLocker.Lock();
         rb = GetComponent<Rigidbody>();
         targetXRotation = camPivot.transform.localRotation.x;
         targetYRotation = camPivot.transform.localRotation.y;
         Physics.gravity *= 4;
 
-
-        //Testing cards
-        TestCard test = new TestCard();
-
-        cards.Add(test);
-
-        foreach (Card card in cards)
-        {
-            if (card.GetStats().cardType == CardType.Triggered)
-            {
-                card.SubscribeEvent();
-            }
-        }
+        dashTimer = new Timer(ps.dashTime);
+        dashTimer.SetTime(0);
+        dashCooldownTimer = new Timer(ps.dashCooldown);
+        dashCooldownTimer.SetTime(0);
+        ps.health = ps.maxHealth;
+        ps.shield = ps.maxShield;
     }
 
     void Update()
     {
-        Debug.Log(ps.walkMoveSpeed);
-
         var onGroundLastFrame = onGround;
         onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
         if (!onGroundLastFrame && onGround)
@@ -117,9 +113,9 @@ public class PlayerController : MonoBehaviour
         //}
 
         //Count down dash timers
-        if (ps.dashTimeLeft > 0)
+        if (!dashTimer.IsDone())
         {
-            ps.dashTimeLeft -= Time.deltaTime;
+            dashTimer.Tick(Time.deltaTime);
             if (cam.fieldOfView < ps.dashFOV)
             {
                 cam.fieldOfView += FOVChangeRate * Time.deltaTime;
@@ -133,12 +129,17 @@ public class PlayerController : MonoBehaviour
             if (cam.fieldOfView > ps.walkFOV)
             {
                 cam.fieldOfView -= FOVChangeRate * Time.deltaTime;
+                if(isDashing)
+                {
+                    isDashing = false;
+                    PlayerDashEnd.Invoke(gameObject);
+                }
             }
         }
 
-        if (ps.dashCooldownTimeLeft > 0)
+        if (!dashCooldownTimer.IsDone())
         {
-            ps.dashCooldownTimeLeft -= Time.deltaTime;
+            dashCooldownTimer.Tick(Time.deltaTime);
         }
 
     }
@@ -147,13 +148,14 @@ public class PlayerController : MonoBehaviour
     {
         Movement();
 
-        if (dashAction.IsPressed() && hasControl && ps.dashCooldownTimeLeft <= 0)
+        if (dashAction.IsPressed() && hasControl && dashCooldownTimer.IsDone())
         {
+            isDashing = true;
             PlayerDash.Invoke(gameObject);
             ps.maxMagnitude = ps.dashMaxMagnitude;
             rb.AddForce(transform.forward * ps.dashForce);
-            ps.dashTimeLeft = ps.dashTime;
-            ps.dashCooldownTimeLeft = ps.dashCooldown;
+            dashTimer.Reset();
+            dashCooldownTimer.Reset();
             ps.moveSpeed = ps.dashMoveSpeed;
             ps.deccelRate = ps.dashDeccelRate;
         }
@@ -225,40 +227,53 @@ public class PlayerStats
     public Stat walkMoveSpeedStat;
     public Stat jumpPowerStat;
     public Stat walkMaxMagnitudeStat;
+    public Stat maxHealthStat;
+    public Stat maxShieldStat;
+    public Stat shieldCooldownStat;
+    public Stat shieldRegenSpeedStat;
 
+
+    //The Hide in Inspector variables are mostly here to save me some re-coding, as they are just references to the stats above
+    //The non-hide in inspector variables are variables that do not have a stat attached to them, meaning they cannot have modifiers applied to them.
 
     //Dash variables
     [HideInInspector] public float dashTime { get { return dashTimeStat.Value; } set { dashTimeStat.SetBaseValue(value); } } //How long does the dash last
-    [HideInInspector] public float dashTimeLeft; //A tracker for dash time.
     [HideInInspector] public float dashCooldown { get { return dashCooldownStat.Value; } set { dashCooldownStat.SetBaseValue(value); } } //How long after a dash before the player can dash again
-    [HideInInspector] public float dashCooldownTimeLeft; //A tracker for dash cooldown
-    [Header("Unmodifyable Stats")]
-    [Space]
-    public float dashForce; //How much force is applied during the dash.
     [HideInInspector] public float dashMaxMagnitude { get { return dashMaxMagnitudeStat.Value; } set { dashMaxMagnitudeStat.SetBaseValue(value); } } //The max magnitude of the player during the dash.
     [HideInInspector] public float dashMoveSpeed { get { return dashMoveSpeedStat.Value; } set { dashMoveSpeedStat.SetBaseValue(value); } } //Control the player has when dashing
+    [Header("Unmodifyable Stats")]
+    [Space]
+    public float dashForce; //How much force is applied during the dash.   
     public float dashDeccelRate = 1.05f; //DeccelRate during dash
     public float dashFOV; //Camera FOV during dash
 
     //Movement Variables
-    public float moveSpeed; //The speed at which the player accelerates (modified by walk and dash move speed)
     [HideInInspector] public float walkMoveSpeed { get { return walkMoveSpeedStat.Value; } set { walkMoveSpeedStat.SetBaseValue(value); } } //Control the player has when walking
-    public float rotateSpeed; //Camera sensitivity
     [HideInInspector] public float jumpPower { get { return jumpPowerStat.Value; } set { jumpPowerStat.SetBaseValue(value); } } //How much force is applied during a jump
     [HideInInspector] public float walkMaxMagnitude { get { return walkMaxMagnitudeStat.Value; } set { walkMaxMagnitudeStat.SetBaseValue(value); } } //Max magnitude while not dashing
     public float maxMagnitude; //The max speed the player can move at (modified by walk max magnitude and dash max magnitude)
+    public float moveSpeed; //The speed at which the player accelerates (modified by walk and dash move speed)
+    public float rotateSpeed; //Camera sensitivity
     public float deccelRate = 1.1f; //Essentially simulated friction, the rate the player deccelerates when not moving in a given direction
     public float walkDeccelRate = 1.1f; //Deccel rate during walk
     public float walkFOV = 60;
 
-    public void Clear()
-    {
-        dashTimeStat.ClearModifiers();
-        dashCooldownStat.ClearModifiers();
-        dashMaxMagnitudeStat.ClearModifiers();
-        dashMoveSpeedStat.ClearModifiers();
-        walkMoveSpeedStat.ClearModifiers();
-        jumpPowerStat.ClearModifiers();
-        walkMaxMagnitudeStat.ClearModifiers();
-    }
+    //Player resources
+    [HideInInspector] public float health;
+    [HideInInspector] public float maxHealth { get { return maxHealthStat.Value; } set { maxHealthStat.SetBaseValue(value); } }
+    [HideInInspector] public float shield;
+    [HideInInspector] public float maxShield { get { return maxShieldStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
+    [HideInInspector] public float shieldCooldown { get { return shieldCooldownStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
+    [HideInInspector] public float shieldRegenSpeed { get { return shieldRegenSpeedStat.Value; } set { shieldRegenSpeedStat.SetBaseValue (value); } }
+
+    //public void Clear() //WARNING: Will reset all item stat modifications!
+    //{
+    //    dashTimeStat.ClearModifiers();
+    //    dashCooldownStat.ClearModifiers();
+    //    dashMaxMagnitudeStat.ClearModifiers();
+    //    dashMoveSpeedStat.ClearModifiers();
+    //    walkMoveSpeedStat.ClearModifiers();
+    //    jumpPowerStat.ClearModifiers();
+    //    walkMaxMagnitudeStat.ClearModifiers();
+    //}
 }
