@@ -70,8 +70,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0)
+        {
+            hasControl = false;
+        }
+        else
+        {
+            hasControl = true;
+        }
+
         var onGroundLastFrame = onGround;
-        onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
+        RaycastHit groundHit;
+        Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, out groundHit, Quaternion.identity, groundDist, layerMask);
+        onGround = groundHit.collider != null && !groundHit.collider.isTrigger; //Prevent the player from jumping on triggers
         if (!onGroundLastFrame && onGround)
         {
             Land.Invoke(gameObject);

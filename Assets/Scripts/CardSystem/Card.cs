@@ -15,7 +15,7 @@ public abstract class Card
 {
     public const string CARD_ASSET_PATH = "ScriptableObjects/Cards/";
     public virtual string cardName { get; }
-    
+
     public int stacks = 1;
 
     public virtual CardStats GetStats()
@@ -83,7 +83,7 @@ public class TwoOfBullets : Card
 
 public class AceOfBoots : Card
 {
-    public override string cardName => "Ace of Boots"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+    public override string cardName => "Ace of Boots";
 
     public override void CallCard(PlayerController player)
     {
@@ -139,6 +139,38 @@ public class OutlawOfBullets : Card
         PlayerDashEnd.AddListener(EndEffect);
     }
 }
+public class ThreeOfBadges : Card
+{
+
+    Timer abilityDurationTimer = new Timer(5);
+    PlayerController player;
+    public override string cardName => "Three of Badges";
+
+    public void CallCard(GameObject obj)
+    {
+        abilityDurationTimer.Unpause();
+        abilityDurationTimer.Reset();
+        player = obj.GetComponent<PlayerController>();
+        StatModifier modifier = new StatModifier(0.5f + (0.25f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.damage.AddModifier(modifier);
+    }
+
+    public override void SubscribeEvent()
+    {
+        ShieldBreak.AddListener(CallCard);
+    }
+
+    public override void Update()
+    {
+        abilityDurationTimer.Tick(Time.deltaTime);
+
+        if(abilityDurationTimer.IsDone() && !abilityDurationTimer.isPaused)
+        {
+            player.gun.stats.damage.RemoveModifier(cardName);
+            abilityDurationTimer.Pause();
+        }
+    }
+}
 
 #endregion
 
@@ -147,5 +179,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     TestCard,
     TwoOfBullets,
     AceOfBoots,
-    OutlawOfBullets
+    OutlawOfBullets,
+    ThreeOfBadges
 }

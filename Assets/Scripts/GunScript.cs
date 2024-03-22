@@ -21,6 +21,8 @@ public class GunScript : MonoBehaviour
     //AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
+    [SerializeField] InputAction reloadAction;
+    Timer reloadTimer;
 
     private void Awake()
     {
@@ -28,6 +30,8 @@ public class GunScript : MonoBehaviour
         //src = GetComponent<AudioSource>();
         ammo = stats.maxAmmo.iValue;
         timer = new Timer(1f / stats.fireRate.Value);
+        reloadTimer = new Timer(2);
+        reloadTimer.Pause();
     }
 
     private void Update()
@@ -103,16 +107,32 @@ public class GunScript : MonoBehaviour
                 ammo -= 1;
             }
         }
+
+        reloadTimer.Tick(Time.deltaTime);
+
+        if(reloadAction.WasPressedThisFrame() && ammo <= 0)
+        {
+            reloadTimer.Unpause();
+        }
+
+        if(reloadTimer.IsDone())
+        {
+            ammo = stats.maxAmmo.iValue;
+            reloadTimer.Reset();
+            reloadTimer.Pause();
+        }
     }
 
     private void OnEnable()
     {
         fireAction.Enable();
+        reloadAction.Enable();
     }
 
     private void OnDisable()
     {
         fireAction.Disable();
+        reloadAction.Disable();
     }
 }
 

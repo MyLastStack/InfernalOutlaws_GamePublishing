@@ -28,6 +28,10 @@ public class CardManager : MonoBehaviour
             cards.Add(card);
             CallCard(cards[cards.Count - 1]);
         }
+
+        //Maybe move these somewhere else but for now they should work
+        Time.timeScale = 1;
+        MouseLocker.Lock();
     }
 
     void CallCard(Card card)
@@ -39,6 +43,14 @@ public class CardManager : MonoBehaviour
         else
         {
             card.SubscribeEvent();
+        }
+    }
+
+    private void Update()
+    {
+        foreach(Card card in cards)
+        {
+            card.Update();
         }
     }
 }

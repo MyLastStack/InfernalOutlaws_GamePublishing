@@ -40,9 +40,12 @@ public class EnemyBehaviour : MonoBehaviour
         agent.SetDestination(player.transform.position);
 
         //If player is in range, try to attack
-        if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
+        if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
         {
             attackTimer.Tick(Time.deltaTime);
+            //Rotate to look at the player
+            Quaternion rotation = Quaternion.LookRotation(player.gameObject.transform.position - transform.position);
+            transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
         }
         else //Otherwise reset attack timer back to its max
         {
