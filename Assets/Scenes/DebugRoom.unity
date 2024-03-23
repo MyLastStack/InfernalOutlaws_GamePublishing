@@ -1490,6 +1490,33 @@ MonoBehaviour:
   healthText: {fileID: 1694559466}
   shieldText: {fileID: 253180056}
   player: {fileID: 1024737202}
+--- !u!1 &1081037908 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4907588331131751603, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+  m_PrefabInstance: {fileID: 6893021172489939134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1081037912
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081037908}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6999386053696753305, guid: 4f1fbfe56eb8d81428775c6d340ea297, type: 3}
 --- !u!1001 &1175900401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2304,6 +2331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemy: {fileID: 2855626829061783066, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
   spawnCooldown: 2
+  spawnRadius: 0
 --- !u!1 &1622085720
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2864,66 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 93cf9dbebfcf2d34895167bb9525f93a, type: 3}
+--- !u!1001 &6893021172489939134
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.553
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.787
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.191
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.91764647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.050756194
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.37394544
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.12455347
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -10.737
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -43.288
+      objectReference: {fileID: 0}
+    - target: {fileID: 6252576782245232646, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -11.188
+      objectReference: {fileID: 0}
+    - target: {fileID: 6741411283102685884, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      propertyPath: m_Name
+      value: Frog
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4907588331131751603, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1081037912}
+  m_SourcePrefab: {fileID: 100100000, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
 --- !u!1001 &7693281047924973288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2951,3 +3039,4 @@ SceneRoots:
   - {fileID: 2054495247}
   - {fileID: 1925306942}
   - {fileID: 1595769655}
+  - {fileID: 6893021172489939134}
