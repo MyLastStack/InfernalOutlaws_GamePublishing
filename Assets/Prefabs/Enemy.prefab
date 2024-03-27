@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 4472401235255327598}
   - component: {fileID: 130990007747647919}
   - component: {fileID: 4961151608122918326}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AttackBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

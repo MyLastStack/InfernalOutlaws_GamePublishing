@@ -2301,7 +2301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1595769655
 Transform:
   m_ObjectHideFlags: 0
@@ -2329,9 +2329,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2e56c3af46752b478bef883a2f22326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 2855626829061783066, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
+  enemyPrefabs:
+  - {fileID: 6741411283102685884, guid: c18697e153b2bd440b43909dea9d74ed, type: 3}
+  - {fileID: 2855626829061783066, guid: 2641f43a403f02b4e81b68a345550e4a, type: 3}
   spawnCooldown: 2
   spawnRadius: 50
+  CardMenu: {fileID: 225009760}
+  waves:
+  - enemies: 0000000000000000010000000000000000000000
 --- !u!1 &1622085720
 GameObject:
   m_ObjectHideFlags: 0
