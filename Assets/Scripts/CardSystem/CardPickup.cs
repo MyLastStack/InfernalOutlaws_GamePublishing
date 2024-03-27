@@ -48,6 +48,9 @@ public class CardPickup : MonoBehaviour
             case Cards.ThreeOfBadges:
                 cardScript = new ThreeOfBadges();
                 break;
+            case Cards.FourOfLassos:
+                cardScript = new FourOfLassos();
+                break;
         }
     }
 

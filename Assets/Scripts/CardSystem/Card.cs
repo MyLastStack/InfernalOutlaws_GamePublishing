@@ -92,6 +92,19 @@ public class AceOfBoots : Card
     }
 }
 
+public class FourOfLassos : Card
+{
+    public override string cardName => "Four of Lassos";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier1 = new StatModifier(0.25f + (0.12f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        StatModifier modifier2 = new StatModifier(-0.10f + (-0.05f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.damage.AddModifier(modifier1);
+        player.gun.stats.fireRate.AddModifier(modifier2);
+    }
+}
+
 #endregion
 
 #region Triggered Cards
@@ -157,6 +170,7 @@ public class ThreeOfBadges : Card
 
     public override void SubscribeEvent()
     {
+        abilityDurationTimer.Pause();
         ShieldBreak.AddListener(CallCard);
     }
 
@@ -180,5 +194,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     TwoOfBullets,
     AceOfBoots,
     OutlawOfBullets,
-    ThreeOfBadges
+    ThreeOfBadges,
+    FourOfLassos
 }
