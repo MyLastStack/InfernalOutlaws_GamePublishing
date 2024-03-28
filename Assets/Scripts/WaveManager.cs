@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
+using static EventManager;
 
 public class WaveManager : MonoBehaviour
 {
@@ -16,11 +18,16 @@ public class WaveManager : MonoBehaviour
     public GameObject CardMenu;
 
     public EnemyTypeWrapper[] waves; //Fill this with the enemies in each waves
+    private List<EnemyTypes> currentWaveEnemies = new List<EnemyTypes>();
+    private List<GameObject> activeEnemies = new List<GameObject>();
 
     private void Start()
     {
         timer = new Timer(spawnCooldown);
         timer.timerComplete.AddListener(SpawnEnemy);
+        SetWaveEnemeies(currentWave);
+        WaveStart.AddListener(SetWaveEnemeies); //Set enemies at the start of a wave
+        AddCard.AddListener(StartWave);
     }
 
     private void Update()
@@ -31,21 +38,40 @@ public class WaveManager : MonoBehaviour
     public void SpawnEnemy()
     {
         currentEnemy++;
-        if (currentEnemy >= waves[currentWave - 1].enemies.Length) //If the player is on the last enemy of the wave, go to the next wave
+        if (currentEnemy >= currentWaveEnemies.Count) //If the player is on the last enemy of the wave, go to the next wave
         {
-            currentWave = Mathf.Clamp(currentWave + 1, 1, waves.Length);
-            currentEnemy = 1;
-            CardMenu.SetActive(true);
+            activeEnemies.RemoveAll(x => x == null || !x.activeSelf);
+            if (activeEnemies.Count == 0)
+            {
+                WaveEnd.Invoke(currentWave);
+                CardMenu.SetActive(true);
+            }
         }
         else
         {
             timer.Reset();
             Vector3 pos = RandomNavmeshLocation(spawnRadius);
-            GameObject selectedPrefab = enemyPrefabs[(int)(waves[currentWave - 1].enemies[currentEnemy - 1])]; //Selects an enemy prefab based on the enum
+            GameObject selectedPrefab = enemyPrefabs[(int)(currentWaveEnemies[currentEnemy - 1])]; //Selects an enemy prefab based on the enum
 
-            Instantiate(selectedPrefab, pos, Quaternion.Euler(Vector3.zero), transform);
+            activeEnemies.Add(Instantiate(selectedPrefab, pos, Quaternion.Euler(Vector3.zero), transform));
 
         }
+    }
+
+    void SetWaveEnemeies(int wave)
+    {
+        currentWaveEnemies.Clear();
+        for (int i = 0; i < wave; i++)
+        {
+            currentWaveEnemies.AddRange(waves[Random.Range(0, waves.Length)].enemies); //Add a selected group of enemies to the wave
+        }
+    }
+
+    void StartWave(Card eventData)
+    {
+        currentWave = Mathf.Clamp(currentWave + 1, 1, waves.Length);
+        currentEnemy = 1;
+        WaveStart.Invoke(currentWave);
     }
 
     public Vector3 RandomNavmeshLocation(float radius)
