@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     public Timer dashTimer;
     public Timer dashCooldownTimer;
 
+    public Timer shieldCooldownTimer;
+
     public GunScript gun; //For the purpose of referencing in cards
     public bool isDashing = false;
 
@@ -59,14 +61,28 @@ public class PlayerController : MonoBehaviour
         dashTimer.SetTime(0);
         dashCooldownTimer = new Timer(ps.dashCooldown);
         dashCooldownTimer.SetTime(0);
+        shieldCooldownTimer = new Timer(ps.shieldCooldown);
+        shieldCooldownTimer.SetTime(0);
+
         ps.health = ps.maxHealth;
         ps.shield = ps.maxShield;
     }
 
     void Update()
     {
+        if (Time.timeScale == 0)
+        {
+            hasControl = false;
+        }
+        else
+        {
+            hasControl = true;
+        }
+
         var onGroundLastFrame = onGround;
-        onGround = Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, Quaternion.identity, groundDist, layerMask);
+        RaycastHit groundHit;
+        Physics.BoxCast(playerModel.transform.position, new Vector3(1, 0.1f, 1) * 2, Vector3.down, out groundHit, Quaternion.identity, groundDist, layerMask);
+        onGround = groundHit.collider != null && !groundHit.collider.isTrigger; //Prevent the player from jumping on triggers
         if (!onGroundLastFrame && onGround)
         {
             Land.Invoke(gameObject);
@@ -129,7 +145,7 @@ public class PlayerController : MonoBehaviour
             if (cam.fieldOfView > ps.walkFOV)
             {
                 cam.fieldOfView -= FOVChangeRate * Time.deltaTime;
-                if(isDashing)
+                if (isDashing)
                 {
                     isDashing = false;
                     PlayerDashEnd.Invoke(gameObject);
@@ -142,6 +158,16 @@ public class PlayerController : MonoBehaviour
             dashCooldownTimer.Tick(Time.deltaTime);
         }
 
+        Debug.Log(shieldCooldownTimer.IsDone());
+        //Check if shield should regenerate
+        if (!shieldCooldownTimer.IsDone())
+        {
+            shieldCooldownTimer.Tick(Time.deltaTime);
+        }
+        else
+        {
+            ps.shield = Mathf.Clamp(ps.shield + (Time.deltaTime * ps.shieldRegenSpeed), 0, ps.maxShield);
+        }
     }
 
     private void FixedUpdate()
@@ -192,6 +218,33 @@ public class PlayerController : MonoBehaviour
             //Finally, it clamps the magnitude of the velocity so that the player doesn't accelerate to infinity
             var clampedVelocity = Vector2.ClampMagnitude(new Vector2(rb.velocity.x, rb.velocity.z), ps.maxMagnitude);
             rb.velocity = new Vector3(clampedVelocity.x, rb.velocity.y, clampedVelocity.y);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        EnemyAttack atk = other.GetComponent<EnemyAttack>();
+        if (atk != null)
+        {
+            if (ps.shield > 0)
+            {
+                ps.shield = Mathf.Clamp(ps.shield - atk.damage, 0, ps.maxShield);
+                shieldCooldownTimer.Reset();
+                GenericHitPlayer.Invoke(gameObject, atk.damage);
+                GenericHitShield.Invoke(gameObject, atk.damage);
+
+                if (ps.shield <= 0)
+                {
+                    ShieldBreak.Invoke(gameObject);
+                }
+            }
+            else
+            {
+                ps.health = Mathf.Clamp(ps.health - atk.damage, 0, ps.maxHealth);
+                shieldCooldownTimer.Reset();
+                GenericHitPlayer.Invoke(gameObject, atk.damage);
+                GenericHitHealth.Invoke(gameObject, atk.damage);
+            }
         }
     }
 
@@ -264,7 +317,7 @@ public class PlayerStats
     [HideInInspector] public float shield;
     [HideInInspector] public float maxShield { get { return maxShieldStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
     [HideInInspector] public float shieldCooldown { get { return shieldCooldownStat.Value; } set { maxShieldStat.SetBaseValue(value); } }
-    [HideInInspector] public float shieldRegenSpeed { get { return shieldRegenSpeedStat.Value; } set { shieldRegenSpeedStat.SetBaseValue (value); } }
+    [HideInInspector] public float shieldRegenSpeed { get { return shieldRegenSpeedStat.Value; } set { shieldRegenSpeedStat.SetBaseValue(value); } }
 
     //public void Clear() //WARNING: Will reset all item stat modifications!
     //{

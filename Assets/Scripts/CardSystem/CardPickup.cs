@@ -19,6 +19,8 @@ public class CardPickup : MonoBehaviour
 
     private void OnEnable() //This will re-roll the card every time it's enabled, meaning you don't have to re-instantiate
     {
+        Time.timeScale = 0;
+        MouseLocker.Unlock();
         card = cardPool[Random.Range(0, cardPool.Length)];
 
         titleText.text = card.name;
@@ -42,6 +44,12 @@ public class CardPickup : MonoBehaviour
                 break;
             case Cards.OutlawOfBullets:
                 cardScript = new OutlawOfBullets();
+                break;
+            case Cards.ThreeOfBadges:
+                cardScript = new ThreeOfBadges();
+                break;
+            case Cards.FourOfLassos:
+                cardScript = new FourOfLassos();
                 break;
         }
     }

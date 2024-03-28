@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,12 +26,12 @@ public class Timer
     //By default you should use Time.deltaTime for tickAmount.
     public void Tick(float tickAmount)
     {
-        if (!isPaused && timeLeft > 0)
+        if (!isPaused && timeLeft > 0f)
         {
-            timeLeft = Mathf.Max(0, timeLeft - tickAmount);
+            timeLeft = (float)Math.Round(Mathf.Clamp(timeLeft - tickAmount, 0, maxTime), 4);
         }
         //Trigger event on complete
-        if(!isPaused && timeLeft == 0)
+        if(!isPaused && timeLeft <= 0f)
         {
             timerComplete.Invoke();
         }
@@ -38,7 +39,7 @@ public class Timer
 
     public bool IsDone()
     {
-        return timeLeft == 0;
+        return timeLeft <= 0f;
     }
 
     public float GetTime()

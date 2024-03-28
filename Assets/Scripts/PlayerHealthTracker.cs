@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,7 +13,7 @@ public class PlayerHealthTracker : MonoBehaviour
 
     private void Update()
     {
-        healthText.text = player.ps.health.ToString();
-        shieldText.text = player.ps.shield.ToString();
+        healthText.text = Math.Round(player.ps.health, 2).ToString();
+        shieldText.text = Math.Round(player.ps.shield, 2).ToString();
     }
 }

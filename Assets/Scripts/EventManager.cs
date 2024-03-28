@@ -40,6 +40,9 @@ public static class EventManager
     public static UnityEvent<GameObject> PlayerDeath = new UnityEvent<GameObject>(); //Called when the player would die
     public static UnityEvent<GameObject> PlayerDash = new UnityEvent<GameObject>(); //Called when the player dashes
     public static UnityEvent<GameObject> PlayerDashEnd = new UnityEvent<GameObject>();
+    public static UnityEvent<GameObject> ShieldBreak = new UnityEvent<GameObject>();
+    public static UnityEvent<GameObject, float> GenericHitShield = new UnityEvent<GameObject, float>();
+    public static UnityEvent<GameObject, float> GenericHitHealth = new UnityEvent<GameObject, float>();
 
     #endregion
 
