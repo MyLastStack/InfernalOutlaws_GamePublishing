@@ -81,6 +81,17 @@ public class TwoOfBullets : Card
     }
 }
 
+public class ThreeOfBullets : Card
+{
+    public override string cardName => "Three of Bullets";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.15f + (0.1f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        player.gun.stats.damage.AddModifier(modifier);
+    }
+}
+
 public class AceOfBoots : Card
 {
     public override string cardName => "Ace of Boots";
@@ -195,5 +206,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     AceOfBoots,
     OutlawOfBullets,
     ThreeOfBadges,
-    FourOfLassos
+    FourOfLassos,
+    ThreeOfBullets
 }

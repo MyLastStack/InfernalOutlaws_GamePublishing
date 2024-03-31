@@ -69,8 +69,10 @@ public class WaveManager : MonoBehaviour
 
     void StartWave(Card eventData)
     {
-        currentWave = Mathf.Clamp(currentWave + 1, 1, waves.Length);
+        currentWave++;
         currentEnemy = 1;
+        spawnCooldown -= (spawnCooldown / 20); //5% timer reduction per wave
+        timer.SetMaxTime(spawnCooldown);
         WaveStart.Invoke(currentWave);
     }
 

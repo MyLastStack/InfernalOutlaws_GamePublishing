@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using static EventManager;
 
 public class PlayerController : MonoBehaviour
@@ -70,6 +71,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene("MainMenu"); } //Quit game
+
         if (Time.timeScale == 0)
         {
             hasControl = false;
@@ -168,6 +171,13 @@ public class PlayerController : MonoBehaviour
         {
             ps.shield = Mathf.Clamp(ps.shield + (Time.deltaTime * ps.shieldRegenSpeed), 0, ps.maxShield);
         }
+
+
+        if(ps.health <= 0)
+        {
+            MouseLocker.Unlock();
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
     private void FixedUpdate()
@@ -224,14 +234,20 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         EnemyAttack atk = other.GetComponent<EnemyAttack>();
-        if (atk != null)
+        if (atk != null) //If hit by an enemy attack
         {
+            //Reset the shield
+            shieldCooldownTimer.SetMaxTime(ps.shieldCooldown);
+            shieldCooldownTimer.Reset();
+
+            //Invoke events
+            GenericHitPlayer.Invoke(gameObject, atk.damage);
+            GenericHitHealth.Invoke(gameObject, atk.damage);
+
+            //Check if player is taking shield damage or health damage
             if (ps.shield > 0)
             {
                 ps.shield = Mathf.Clamp(ps.shield - atk.damage, 0, ps.maxShield);
-                shieldCooldownTimer.Reset();
-                GenericHitPlayer.Invoke(gameObject, atk.damage);
-                GenericHitShield.Invoke(gameObject, atk.damage);
 
                 if (ps.shield <= 0)
                 {
@@ -241,9 +257,6 @@ public class PlayerController : MonoBehaviour
             else
             {
                 ps.health = Mathf.Clamp(ps.health - atk.damage, 0, ps.maxHealth);
-                shieldCooldownTimer.Reset();
-                GenericHitPlayer.Invoke(gameObject, atk.damage);
-                GenericHitHealth.Invoke(gameObject, atk.damage);
             }
         }
     }

@@ -700,7 +700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 295}
+  m_AnchoredPosition: {x: 0, y: 315}
   m_SizeDelta: {x: 1200, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376624369
@@ -723,7 +723,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: INFERNAL OUTLAWS
+  m_text: GAME OVER
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 81be3ab0a2a80b340a6cc15768cbbd1b, type: 2}
   m_sharedMaterial: {fileID: -9149772171730283559, guid: 81be3ab0a2a80b340a6cc15768cbbd1b, type: 2}
@@ -975,7 +975,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start
+  m_text: Retry
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9079f8bd5a3706041b923f77b497f98f, type: 2}
   m_sharedMaterial: {fileID: -3930692447516614153, guid: 9079f8bd5a3706041b923f77b497f98f, type: 2}

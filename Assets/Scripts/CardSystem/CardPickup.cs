@@ -51,6 +51,9 @@ public class CardPickup : MonoBehaviour
             case Cards.FourOfLassos:
                 cardScript = new FourOfLassos();
                 break;
+            case Cards.ThreeOfBullets:
+                cardScript = new ThreeOfBullets();
+                break;
         }
     }
 
