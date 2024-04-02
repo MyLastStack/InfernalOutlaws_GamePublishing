@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,14 +13,14 @@ public class HealthScript : MonoBehaviour
 
     private void Update()
     {
-        healthText.text = health.ToString();
+        healthText.text = Math.Round(health, 2).ToString();
         if (health <= 0)
         {
             EntityDeath.Invoke(gameObject);
             if (type == EntityType.Enemy)
             {
                 EnemyDeath.Invoke(gameObject);
-                gameObject.SetActive(false);
+                Destroy(gameObject);
             }
             else if (type == EntityType.Player)
             {

@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene("MainMenu"); } //Quit game
+        //if(Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene("MainMenu"); } //Quit game
 
         if (Time.timeScale == 0)
         {
