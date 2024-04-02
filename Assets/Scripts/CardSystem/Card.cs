@@ -143,6 +143,53 @@ public class EightOfBadges : Card
     }
 }
 
+public class SevenOfLassos : Card
+{
+    public override string cardName => "Seven of Lassos";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(10 * stacks, ModifierType.Flat, cardName);
+        player.ps.maxHealthStat.AddModifier(modifier);
+        player.ps.health += 10;
+    }
+}
+
+public class SixOfBadges : Card
+{
+    public override string cardName => "Six of Badges";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(5 * stacks, ModifierType.Flat, cardName);
+        player.ps.maxShieldStat.AddModifier(modifier);
+    }
+}
+
+public class ThreeOfLassos : Card
+{
+    public override string cardName => "Three of Lassos";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.4f * stacks, ModifierType.PercentAdd, cardName);
+        player.ps.shieldRegenSpeedStat.AddModifier(modifier);
+    }
+}
+
+public class DeputyOfBullets : Card
+{
+    public override string cardName => "Deputy of Bullets";
+
+    public override void CallCard(PlayerController player)
+    {
+        float calculatedVal = player.ps.maxHealth;
+        calculatedVal = (calculatedVal - calculatedVal % 10) / 10;
+        StatModifier modifier = new StatModifier(0.01f * calculatedVal * stacks, ModifierType.PercentAdd, cardName);
+        player.gun.stats.damage.AddModifier(modifier);
+    }
+}
+
 #endregion
 
 #region Triggered Cards
@@ -268,6 +315,33 @@ public class SheriffOfBullets : Card
     }
 }
 
+public class NineOfLassos : Card
+{
+    public override string cardName => "Nine of Lassos";
+    PlayerController player;
+    int killCount = 0;
+    int modifierVal = 0;
+
+    public void CallCard(GameObject enemy)
+    {
+        killCount++;
+        if(killCount >= 3)
+        {
+            modifierVal += stacks;
+            killCount = 0;
+            StatModifier modifier = new StatModifier(modifierVal, ModifierType.Flat, cardName);
+            player.ps.maxHealthStat.AddModifier(modifier);
+            player.ps.health += stacks;
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        EnemyDeath.AddListener(CallCard);
+    }
+}
+
 #endregion
 
 public enum Cards //After making a card, make sure to add its name to this list
@@ -282,5 +356,10 @@ public enum Cards //After making a card, make sure to add its name to this list
     EightOfBadges,
     FourOfBullets,
     OutlawOfBadges,
-    SheriffOfBullets
+    SheriffOfBullets,
+    SevenOfLassos,
+    SixOfBadges,
+    ThreeOfLassos,
+    DeputyOfBullets,
+    NineOfLassos
 }

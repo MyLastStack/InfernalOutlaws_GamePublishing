@@ -172,6 +172,8 @@ public class PlayerController : MonoBehaviour
             ps.shield = Mathf.Clamp(ps.shield + (Time.deltaTime * ps.shieldRegenSpeed), 0, ps.maxShield);
         }
 
+        ps.health = Mathf.Clamp(ps.health, 0, ps.maxHealth); //Prevent health from being greater than max health
+
 
         if(ps.health <= 0)
         {
