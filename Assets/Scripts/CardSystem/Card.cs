@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
@@ -190,6 +191,20 @@ public class DeputyOfBullets : Card
     }
 }
 
+public class ThreeOfBoots : Card
+{
+    public override string cardName => "Three of Boots";
+
+    public override void CallCard(PlayerController player)
+    {
+        StatModifier modifier = new StatModifier(0.15f * stacks, ModifierType.PercentAdd, cardName);
+        player.ps.walkMoveSpeedStat.AddModifier(modifier);
+        player.ps.dashMoveSpeedStat.AddModifier(modifier);
+        player.ps.walkMaxMagnitudeStat.AddModifier(modifier);
+        player.ps.dashMaxMagnitudeStat.AddModifier(modifier);
+    }
+}
+
 #endregion
 
 #region Triggered Cards
@@ -342,6 +357,33 @@ public class NineOfLassos : Card
     }
 }
 
+public class SheriffOfBoots : Card
+{
+    public override string cardName => "Sheriff of Boots";
+
+    public void CallCard(GameObject player)
+    {
+        PlayerController playerScript = player.GetComponent<PlayerController>();
+        List<HealthScript> nearbyDamageables = Physics.OverlapSphere(player.transform.position, 3)
+            .Where(x => x.gameObject.GetComponent<HealthScript>() != null)
+            .Select(x => x.gameObject.GetComponent<HealthScript>()).ToList();
+        //To explain this horrid line of code, basically it's casting a sphere around the player with a radius of 3 units. From there, it finds all colliders that contain a health script.
+        //After that, it grabs the health scripts of those objects. Finally, it returns it as a list. This should find all enemies within a 3 unit radius of the player.
+        foreach(HealthScript health in nearbyDamageables)
+        {
+            health.health -= (6 + (4 * (stacks - 1))) * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+            //What this equation does is take the base damage that the card does (6) and adds 4 for every stack past one.
+            //After that, it applies the modifiers that the gun has by dividing the modified value by the base value
+            //(assuming the modified value is 10 and the base value is 5, that means the modifier is 2)
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        Land.AddListener(CallCard);
+    }
+}
+
 #endregion
 
 public enum Cards //After making a card, make sure to add its name to this list
@@ -361,5 +403,7 @@ public enum Cards //After making a card, make sure to add its name to this list
     SixOfBadges,
     ThreeOfLassos,
     DeputyOfBullets,
-    NineOfLassos
+    NineOfLassos,
+    SheriffOfBoots,
+    ThreeOfBoots
 }

@@ -60,4 +60,34 @@ public static class EventManager
 
     //Non-card related
     public static UnityEvent<Card> AddCard = new UnityEvent<Card>();
+
+
+    public static void ResetListeners() //Call this when you restart a run to prevent triggered cards from previous runs from triggering
+    {
+        GenericHitEnemy.RemoveAllListeners();
+        EnemyDeath.RemoveAllListeners();
+        EnemySpawn.RemoveAllListeners();
+        GunFired.RemoveAllListeners();
+        BulletHitEnemy.RemoveAllListeners();
+        Reload.RemoveAllListeners();
+        SpellFired.RemoveAllListeners();
+        SpellHitEnemy.RemoveAllListeners();
+        SpellOffCooldown.RemoveAllListeners();
+        DrawCard.RemoveAllListeners();
+        ShuffleDeck.RemoveAllListeners();
+        GenericHitPlayer.RemoveAllListeners();
+        Jump.RemoveAllListeners();
+        Land.RemoveAllListeners();
+        PlayerDeath.RemoveAllListeners();
+        PlayerDash.RemoveAllListeners();
+        PlayerDashEnd.RemoveAllListeners();
+        ShieldBreak.RemoveAllListeners();
+        GenericHitShield.RemoveAllListeners();
+        GenericHitHealth.RemoveAllListeners();
+        GenericHitEntity.RemoveAllListeners();
+        EntityDeath.RemoveAllListeners();
+        Purchase.RemoveAllListeners();
+        WaveEnd.RemoveAllListeners();
+        WaveStart.RemoveAllListeners();
+    }
 }

@@ -81,6 +81,12 @@ public class CardPickup : MonoBehaviour
             case Cards.NineOfLassos:
                 cardScript = new NineOfLassos();
                 break;
+            case Cards.SheriffOfBoots:
+                cardScript = new SheriffOfBoots();
+                break;
+            case Cards.ThreeOfBoots:
+                cardScript = new ThreeOfBoots();
+                break;
         }
     }
 

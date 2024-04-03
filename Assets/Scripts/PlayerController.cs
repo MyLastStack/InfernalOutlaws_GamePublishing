@@ -56,7 +56,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         targetXRotation = camPivot.transform.localRotation.x;
         targetYRotation = camPivot.transform.localRotation.y;
-        Physics.gravity *= 4;
+        Physics.gravity = 9.81f * 4 * Vector3.down;
 
         dashTimer = new Timer(ps.dashTime);
         dashTimer.SetTime(0);
@@ -178,6 +178,7 @@ public class PlayerController : MonoBehaviour
         if(ps.health <= 0)
         {
             MouseLocker.Unlock();
+            EventManager.ResetListeners();
             SceneManager.LoadScene("GameOver");
         }
     }
