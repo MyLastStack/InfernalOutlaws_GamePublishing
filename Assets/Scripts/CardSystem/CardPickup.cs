@@ -87,6 +87,9 @@ public class CardPickup : MonoBehaviour
             case Cards.ThreeOfBoots:
                 cardScript = new ThreeOfBoots();
                 break;
+            case Cards.FiveOfBadges:
+                cardScript = new FiveOfBadges();
+                break;
         }
     }
 

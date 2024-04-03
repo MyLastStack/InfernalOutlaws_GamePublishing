@@ -1475,6 +1475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1024737202}
+  debugStacks: 1
 --- !u!114 &1024737206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2417,6 +2418,7 @@ MonoBehaviour:
   - enemies: 0000000000000000000000000000000000000000
   - enemies: 0100000001000000
   - enemies: 010000000000000001000000
+  enemyStatModifer: 1
 --- !u!1 &1622085720
 GameObject:
   m_ObjectHideFlags: 0

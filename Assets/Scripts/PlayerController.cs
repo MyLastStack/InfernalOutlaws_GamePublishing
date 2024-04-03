@@ -245,11 +245,11 @@ public class PlayerController : MonoBehaviour
 
             //Invoke events
             GenericHitPlayer.Invoke(gameObject, atk.damage);
-            GenericHitHealth.Invoke(gameObject, atk.damage);
 
             //Check if player is taking shield damage or health damage
             if (ps.shield > 0)
             {
+                GenericHitShield.Invoke(gameObject, atk.damage);
                 ps.shield = Mathf.Clamp(ps.shield - atk.damage, 0, ps.maxShield);
 
                 if (ps.shield <= 0)
@@ -259,6 +259,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                GenericHitHealth.Invoke(gameObject, atk.damage);
                 ps.health = Mathf.Clamp(ps.health - atk.damage, 0, ps.maxHealth);
             }
         }

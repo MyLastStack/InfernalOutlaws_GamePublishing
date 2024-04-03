@@ -278,7 +278,7 @@ public class ThreeOfBadges : Card
     {
         abilityDurationTimer.Tick(Time.deltaTime);
 
-        if(abilityDurationTimer.IsDone() && !abilityDurationTimer.isPaused)
+        if (abilityDurationTimer.IsDone() && !abilityDurationTimer.isPaused)
         {
             player.gun.stats.damage.RemoveModifier(cardName);
             abilityDurationTimer.Pause();
@@ -340,7 +340,7 @@ public class NineOfLassos : Card
     public void CallCard(GameObject enemy)
     {
         killCount++;
-        if(killCount >= 3)
+        if (killCount >= 3)
         {
             modifierVal += stacks;
             killCount = 0;
@@ -369,7 +369,7 @@ public class SheriffOfBoots : Card
             .Select(x => x.gameObject.GetComponent<HealthScript>()).ToList();
         //To explain this horrid line of code, basically it's casting a sphere around the player with a radius of 3 units. From there, it finds all colliders that contain a health script.
         //After that, it grabs the health scripts of those objects. Finally, it returns it as a list. This should find all enemies within a 3 unit radius of the player.
-        foreach(HealthScript health in nearbyDamageables)
+        foreach (HealthScript health in nearbyDamageables)
         {
             health.health -= (6 + (4 * (stacks - 1))) * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
             //What this equation does is take the base damage that the card does (6) and adds 4 for every stack past one.
@@ -381,6 +381,38 @@ public class SheriffOfBoots : Card
     public override void SubscribeEvent()
     {
         Land.AddListener(CallCard);
+    }
+}
+
+public class FiveOfBadges : Card
+{
+    public override string cardName => "Five of Badges";
+    private const float MAX_VAL = 0.75f;
+
+    public void CallCard(GameObject player, float damage)
+    {
+        PlayerController playerScript = player.GetComponent<PlayerController>();
+
+        float damageReduction = 0;
+        for (int i = 0; i < stacks; i++)
+        {
+            damageReduction += (MAX_VAL - damageReduction + 0.001f) / 10;
+            damageReduction = Mathf.Min(damageReduction, MAX_VAL);
+        }
+
+        if (playerScript.ps.shield > 0)
+        {
+            player.GetComponent<PlayerController>().ps.shield += (damage * damageReduction);
+        }
+        else
+        {
+            player.GetComponent<PlayerController>().ps.health += (damage * damageReduction);
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitPlayer.AddListener(CallCard);
     }
 }
 
@@ -405,5 +437,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     DeputyOfBullets,
     NineOfLassos,
     SheriffOfBoots,
-    ThreeOfBoots
+    ThreeOfBoots,
+    FiveOfBadges
 }
