@@ -11,10 +11,19 @@ public class ToxicCloud : MonoBehaviour
     private Vector3 initialScale;
     private float startTime;
 
+    private float damageDeal = 2.5f;
+
+    private PlayerController playerScript;
+    private Timer timer;
+
     void Start()
     {
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
         initialScale = transform.localScale;
         startTime = Time.time;
+
+        timer = new Timer(0.5f);
     }
 
     void Update()
@@ -28,6 +37,23 @@ public class ToxicCloud : MonoBehaviour
         if (progress >= 1f)
         {
             Destroy(gameObject, stayDuration);
+        }
+
+        timer.Tick(Time.deltaTime);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        HealthScript enemyGO = other.gameObject.GetComponent<HealthScript>();
+
+        if (enemyGO != null)
+        {
+            if (timer.IsDone())
+            {
+                timer.Reset();
+
+                enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+            }
         }
     }
 }

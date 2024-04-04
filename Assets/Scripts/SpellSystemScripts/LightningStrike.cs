@@ -10,8 +10,14 @@ public class LightningStrike : MonoBehaviour
     private Vector3 initialScale;
     private float startTime;
 
+    private float damageDeal = 10f;
+
+    private PlayerController playerScript;
+
     void Start()
     {
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
         initialScale = transform.localScale;
         startTime = Time.time;
     }
@@ -29,6 +35,16 @@ public class LightningStrike : MonoBehaviour
         if (progress >= 1f)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        HealthScript enemyGO = other.gameObject.GetComponent<HealthScript>();
+
+        if (enemyGO != null)
+        {
+            enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
         }
     }
 }
