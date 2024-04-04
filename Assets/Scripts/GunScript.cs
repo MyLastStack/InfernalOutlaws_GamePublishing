@@ -21,17 +21,32 @@ public class GunScript : MonoBehaviour
     //AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
+    [SerializeField] InputAction reloadAction;
+    Timer reloadTimer;
+
+
+
+    //For event data purposes
+    [HideInInspector] public float damageDealt;
 
     private void Awake()
     {
         stats.SetStats();
         //src = GetComponent<AudioSource>();
         ammo = stats.maxAmmo.iValue;
-        timer = new Timer(1f / stats.fireRate.Value);
+        timer = new Timer(1f / stats.fireRate.Value + 0.001f);
+        reloadTimer = new Timer(2);
+        reloadTimer.Pause();
     }
 
     private void Update()
     {
+        #region Place stat tracking debugs here
+
+        Debug.Log(stats.fireRate.Value);
+
+        #endregion
+
 
         timer.Tick(Time.deltaTime);
         //Okay, to prevent a bunch of layered if statements I put this all in one If statement, in total what it's checking is
@@ -43,7 +58,7 @@ public class GunScript : MonoBehaviour
         if (fireAction.IsPressed() && timer.IsDone() && active && (stats.usesAmmo && ammo > 0 || !stats.usesAmmo) && Time.timeScale > 0)
         {
             timer.Reset();
-            timer.SetMaxTime(stats.fireRate.Value);
+            timer.SetMaxTime(1f / stats.fireRate.Value + 0.001f);
             GunFired.Invoke(this);
 
             //src.Play();
@@ -52,8 +67,8 @@ public class GunScript : MonoBehaviour
             RaycastHit hit;
             Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
             ray.direction += new Vector3
-                (Random.Range(-stats.spread.Value, stats.spread.Value), 
-                Random.Range(-stats.spread.Value, stats.spread.Value), 
+                (Random.Range(-stats.spread.Value, stats.spread.Value),
+                Random.Range(-stats.spread.Value, stats.spread.Value),
                 Random.Range(-stats.spread.Value, stats.spread.Value));
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
@@ -70,15 +85,16 @@ public class GunScript : MonoBehaviour
                 var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
                 if (healthScript != null)
                 {
+                    damageDealt = stats.damage.Value;
                     //Invoke events
-                    GenericHitEntity.Invoke(hitEntity, stats.damage.Value);
-                    if(healthScript.type == EntityType.Enemy)
+                    GenericHitEntity.Invoke(hitEntity, damageDealt);
+                    if (healthScript.type == EntityType.Enemy)
                     {
-                        GenericHitEnemy.Invoke(hitEntity, stats.damage.Value);
-                        BulletHitEnemy.Invoke(this, hitEntity, stats.damage.Value);
+                        GenericHitEnemy.Invoke(hitEntity, damageDealt);
+                        BulletHitEnemy.Invoke(this, hitEntity, damageDealt);
                     }
 
-                    healthScript.health -= stats.damage.Value;
+                    healthScript.health -= damageDealt;
                 }
             }
             else //If it doesn't hit anything
@@ -97,16 +113,32 @@ public class GunScript : MonoBehaviour
                 ammo -= 1;
             }
         }
+
+        reloadTimer.Tick(Time.deltaTime);
+
+        if(reloadAction.WasPressedThisFrame() && ammo <= 0)
+        {
+            reloadTimer.Unpause();
+        }
+
+        if(reloadTimer.IsDone())
+        {
+            ammo = stats.maxAmmo.iValue;
+            reloadTimer.Reset();
+            reloadTimer.Pause();
+        }
     }
 
     private void OnEnable()
     {
         fireAction.Enable();
+        reloadAction.Enable();
     }
 
     private void OnDisable()
     {
         fireAction.Disable();
+        reloadAction.Disable();
     }
 }
 

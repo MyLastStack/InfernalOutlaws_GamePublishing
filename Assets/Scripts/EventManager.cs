@@ -39,6 +39,10 @@ public static class EventManager
     public static UnityEvent<GameObject> Land = new UnityEvent<GameObject>(); //Called when the player lands on the ground
     public static UnityEvent<GameObject> PlayerDeath = new UnityEvent<GameObject>(); //Called when the player would die
     public static UnityEvent<GameObject> PlayerDash = new UnityEvent<GameObject>(); //Called when the player dashes
+    public static UnityEvent<GameObject> PlayerDashEnd = new UnityEvent<GameObject>();
+    public static UnityEvent<GameObject> ShieldBreak = new UnityEvent<GameObject>();
+    public static UnityEvent<GameObject, float> GenericHitShield = new UnityEvent<GameObject, float>();
+    public static UnityEvent<GameObject, float> GenericHitHealth = new UnityEvent<GameObject, float>();
 
     #endregion
 
@@ -52,4 +56,38 @@ public static class EventManager
 
     #endregion
 
+
+
+    //Non-card related
+    public static UnityEvent<Card> AddCard = new UnityEvent<Card>();
+
+
+    public static void ResetListeners() //Call this when you restart a run to prevent triggered cards from previous runs from triggering
+    {
+        GenericHitEnemy.RemoveAllListeners();
+        EnemyDeath.RemoveAllListeners();
+        EnemySpawn.RemoveAllListeners();
+        GunFired.RemoveAllListeners();
+        BulletHitEnemy.RemoveAllListeners();
+        Reload.RemoveAllListeners();
+        SpellFired.RemoveAllListeners();
+        SpellHitEnemy.RemoveAllListeners();
+        SpellOffCooldown.RemoveAllListeners();
+        DrawCard.RemoveAllListeners();
+        ShuffleDeck.RemoveAllListeners();
+        GenericHitPlayer.RemoveAllListeners();
+        Jump.RemoveAllListeners();
+        Land.RemoveAllListeners();
+        PlayerDeath.RemoveAllListeners();
+        PlayerDash.RemoveAllListeners();
+        PlayerDashEnd.RemoveAllListeners();
+        ShieldBreak.RemoveAllListeners();
+        GenericHitShield.RemoveAllListeners();
+        GenericHitHealth.RemoveAllListeners();
+        GenericHitEntity.RemoveAllListeners();
+        EntityDeath.RemoveAllListeners();
+        Purchase.RemoveAllListeners();
+        WaveEnd.RemoveAllListeners();
+        WaveStart.RemoveAllListeners();
+    }
 }

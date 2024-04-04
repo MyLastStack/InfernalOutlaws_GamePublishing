@@ -10,6 +10,7 @@ public class CardStats : ScriptableObject
     public Sprite sprite;
 
     public CardType cardType;
+    public Cards cardScript;
 }
 
 public enum CardType
