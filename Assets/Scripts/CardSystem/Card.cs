@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using static EventManager;
 
 /// <summary>
@@ -118,11 +119,19 @@ public class AceOfBoots : Card
 public class FourOfLassos : Card
 {
     public override string cardName => "Four of Lassos";
-
+    private const float MAX_VAL = 1f;
     public override void CallCard(PlayerController player)
     {
         StatModifier modifier1 = new StatModifier(0.25f + (0.12f * (stacks - 1)), ModifierType.PercentAdd, cardName);
-        StatModifier modifier2 = new StatModifier(-0.10f + (-0.05f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+
+        float modifierVal = 0;
+        for (int i = 0; i < stacks; i++)
+        {
+            modifierVal += (MAX_VAL - modifierVal + 0.001f) / 10;
+            modifierVal = Mathf.Min(modifierVal, MAX_VAL);
+        }
+        StatModifier modifier2 = new StatModifier(-modifierVal, ModifierType.PercentAdd, cardName);
+
         player.gun.stats.damage.AddModifier(modifier1);
         player.gun.stats.fireRate.AddModifier(modifier2);
     }
@@ -311,7 +320,7 @@ public class SheriffOfBullets : Card
     public void CallCard(GameObject enemy)
     {
         killCount++;
-        StatModifier mod = new StatModifier(killCount * 0.01f, ModifierType.PercentMult, cardName);
+        StatModifier mod = new StatModifier(killCount * 0.01f * stacks, ModifierType.PercentMult, cardName);
         player.gun.stats.fireRate.AddModifier(mod);
     }
 
@@ -400,13 +409,36 @@ public class FiveOfBadges : Card
             damageReduction = Mathf.Min(damageReduction, MAX_VAL);
         }
 
-        if (playerScript.ps.shield > 0)
+        player.GetComponent<PlayerController>().damageRecieved *= (1 - damageReduction);
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitPlayer.AddListener(CallCard);
+    }
+}
+
+public class FourOfBadges : Card
+{
+    public override string cardName => "Four of Badges";
+    private const float MAX_VAL = 0.75f;
+
+    public void CallCard(GameObject player, float damage)
+    {
+        PlayerController playerScript = player.GetComponent<PlayerController>();
+
+        float chance = 0;
+        for (int i = 0; i < stacks; i++)
         {
-            player.GetComponent<PlayerController>().ps.shield += (damage * damageReduction);
+            chance += (MAX_VAL - chance + 0.001f) / 10;
+            chance = Mathf.Min(chance, MAX_VAL);
         }
-        else
+
+        bool preventDamage = Random.Range(0f, 1f) < chance;
+
+        if (preventDamage)
         {
-            player.GetComponent<PlayerController>().ps.health += (damage * damageReduction);
+            player.GetComponent<PlayerController>().damageRecieved = 0;
         }
     }
 
@@ -438,5 +470,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     NineOfLassos,
     SheriffOfBoots,
     ThreeOfBoots,
-    FiveOfBadges
+    FiveOfBadges,
+    FourOfBadges
 }

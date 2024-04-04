@@ -1416,6 +1416,7 @@ MonoBehaviour:
   FOVChangeRate: 150
   gun: {fileID: 1528251789}
   isDashing: 1
+  damageRecieved: 0
 --- !u!54 &1024737203
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1475,7 +1476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1024737202}
-  debugStacks: 1
+  debugStacks: 10
 --- !u!114 &1024737206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2297,6 +2298,7 @@ MonoBehaviour:
       m_Action: Reload
       m_Flags: 0
     m_Flags: 0
+  damageDealt: 0
 --- !u!23 &1528251791
 MeshRenderer:
   m_ObjectHideFlags: 0

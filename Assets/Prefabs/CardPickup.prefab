@@ -322,6 +322,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 065c1b003d496814da7b5d72b8cfe80b, type: 2}
   - {fileID: 11400000, guid: 04bae2b69e771de49855e5e15632a223, type: 2}
   - {fileID: 11400000, guid: 088389c6460e1db41a21c038a9b5ab89, type: 2}
+  - {fileID: 11400000, guid: 81fce447327fdf246bc83ade15362c3d, type: 2}
   titleText: {fileID: 1403709537559306306}
   descriptionText: {fileID: 1319179569268786907}
   image: {fileID: 5887505110451745695}
@@ -549,7 +550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

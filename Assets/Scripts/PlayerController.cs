@@ -50,6 +50,10 @@ public class PlayerController : MonoBehaviour
     //public float walkIncrements = 0.8f;
     //float walkTime = 0.5f;
 
+
+    //For event data purposes
+    [HideInInspector] public float damageRecieved;
+
     void Start()
     {
         MouseLocker.Lock();
@@ -239,18 +243,20 @@ public class PlayerController : MonoBehaviour
         EnemyAttack atk = other.GetComponent<EnemyAttack>();
         if (atk != null) //If hit by an enemy attack
         {
+            damageRecieved = atk.damage;
+
             //Reset the shield
             shieldCooldownTimer.SetMaxTime(ps.shieldCooldown);
             shieldCooldownTimer.Reset();
 
             //Invoke events
-            GenericHitPlayer.Invoke(gameObject, atk.damage);
+            GenericHitPlayer.Invoke(gameObject, damageRecieved);
 
             //Check if player is taking shield damage or health damage
             if (ps.shield > 0)
             {
-                GenericHitShield.Invoke(gameObject, atk.damage);
-                ps.shield = Mathf.Clamp(ps.shield - atk.damage, 0, ps.maxShield);
+                GenericHitShield.Invoke(gameObject, damageRecieved);
+                ps.shield = Mathf.Clamp(ps.shield - damageRecieved, 0, ps.maxShield);
 
                 if (ps.shield <= 0)
                 {
@@ -259,8 +265,8 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                GenericHitHealth.Invoke(gameObject, atk.damage);
-                ps.health = Mathf.Clamp(ps.health - atk.damage, 0, ps.maxHealth);
+                GenericHitHealth.Invoke(gameObject, damageRecieved);
+                ps.health = Mathf.Clamp(ps.health - damageRecieved, 0, ps.maxHealth);
             }
         }
     }
