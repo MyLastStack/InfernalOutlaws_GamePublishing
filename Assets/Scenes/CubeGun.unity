@@ -789,6 +789,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0498755974d914a479b1f80eeee9e381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ps:
+    dashTimeStat:
+      BaseValue: 0
+    dashCooldownStat:
+      BaseValue: 0
+    dashMaxMagnitudeStat:
+      BaseValue: 0
+    dashMoveSpeedStat:
+      BaseValue: 0
+    walkMoveSpeedStat:
+      BaseValue: 0
+    jumpPowerStat:
+      BaseValue: 0
+    walkMaxMagnitudeStat:
+      BaseValue: 0
+    dashTimeLeft: 0
+    dashCooldownTimeLeft: 0
+    dashForce: 0
+    dashDeccelRate: 1.05
+    dashFOV: 0
+    moveSpeed: 0
+    rotateSpeed: 0
+    maxMagnitude: 0
+    deccelRate: 1.1
+    walkDeccelRate: 1.1
+    walkFOV: 60
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -878,22 +904,6 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 55
-  dashTime: 0.7
-  dashCooldown: 1.5
-  dashForce: 9001
-  dashMaxMagnitude: 30
-  dashMoveSpeed: 10
-  dashDeccelRate: 1
-  dashFOV: 85
-  moveSpeed: 250
-  walkMoveSpeed: 250
-  rotateSpeed: 4
-  jumpPower: 1300
-  walkMaxMagnitude: 15
-  maxMagnitude: 15
-  deccelRate: 1.1
-  walkDeccelRate: 1.1
-  walkFOV: 60
   onGround: 0
   camDist: 0
   groundDist: 0.8
@@ -1263,16 +1273,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67cb0d061873e5f4392e1d08a32fcf21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 0.01
-  spread: 0.1
+  stats:
+    baseStats: {fileID: 0}
+    fireRate:
+      BaseValue: 0
+    spread:
+      BaseValue: 0
+    maxAmmo:
+      BaseValue: 0
+    usesAmmo: 0
+    damage:
+      BaseValue: 0
+    range:
+      BaseValue: 0
   mask:
     serializedVersion: 2
     m_Bits: 51
   active: 1
-  maxAmmo: 5000
-  usesAmmo: 0
-  damage: 5
-  range: 99999
   bulletImpact: {fileID: 2053003883}
   cam: {fileID: 611051971}
   fireAction:
