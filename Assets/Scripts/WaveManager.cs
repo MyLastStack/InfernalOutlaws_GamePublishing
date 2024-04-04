@@ -21,6 +21,9 @@ public class WaveManager : MonoBehaviour
     private List<EnemyTypes> currentWaveEnemies = new List<EnemyTypes>();
     private List<GameObject> activeEnemies = new List<GameObject>();
 
+    public float enemyStatModifer = 1; //Public for debugging & inspector purposes but should generally always start at 1
+ 
+
     private void Start()
     {
         timer = new Timer(spawnCooldown);
@@ -53,8 +56,21 @@ public class WaveManager : MonoBehaviour
             Vector3 pos = RandomNavmeshLocation(spawnRadius);
             GameObject selectedPrefab = enemyPrefabs[(int)(currentWaveEnemies[currentEnemy - 1])]; //Selects an enemy prefab based on the enum
 
-            activeEnemies.Add(Instantiate(selectedPrefab, pos, Quaternion.Euler(Vector3.zero), transform));
+            GameObject spawnedEnemy = Instantiate(selectedPrefab, pos, Quaternion.Euler(Vector3.zero), transform);
 
+            //Update enemy stats
+            EnemyBehaviour enemyScript = spawnedEnemy.GetComponent<EnemyBehaviour>();
+            if(enemyScript != null)
+            {
+                enemyScript.damage *= enemyStatModifer;
+            }
+            HealthScript health = spawnedEnemy.GetComponent<HealthScript>();
+            if(health != null)
+            {
+                health.health *= enemyStatModifer;
+            }
+
+            activeEnemies.Add(spawnedEnemy);
         }
     }
 
@@ -69,8 +85,11 @@ public class WaveManager : MonoBehaviour
 
     void StartWave(Card eventData)
     {
-        currentWave = Mathf.Clamp(currentWave + 1, 1, waves.Length);
+        currentWave++;
         currentEnemy = 1;
+        spawnCooldown -= (spawnCooldown / 20); //5% timer reduction per wave
+        enemyStatModifer *= 1.05f;
+        timer.SetMaxTime(spawnCooldown);
         WaveStart.Invoke(currentWave);
     }
 

@@ -51,6 +51,48 @@ public class CardPickup : MonoBehaviour
             case Cards.FourOfLassos:
                 cardScript = new FourOfLassos();
                 break;
+            case Cards.ThreeOfBullets:
+                cardScript = new ThreeOfBullets();
+                break;
+            case Cards.EightOfBadges:
+                cardScript = new EightOfBadges();
+                break;
+            case Cards.FourOfBullets:
+                cardScript = new FourOfBullets();
+                break;
+            case Cards.OutlawOfBadges:
+                cardScript = new OutlawOfBadges();
+                break;
+            case Cards.SheriffOfBullets:
+                cardScript = new SheriffOfBullets();
+                break;
+            case Cards.SevenOfLassos:
+                cardScript = new SevenOfLassos();
+                break;
+            case Cards.SixOfBadges:
+                cardScript = new SixOfBadges();
+                break;
+            case Cards.ThreeOfLassos:
+                cardScript = new ThreeOfLassos();
+                break;
+            case Cards.DeputyOfBullets:
+                cardScript = new DeputyOfBullets();
+                break;
+            case Cards.NineOfLassos:
+                cardScript = new NineOfLassos();
+                break;
+            case Cards.SheriffOfBoots:
+                cardScript = new SheriffOfBoots();
+                break;
+            case Cards.ThreeOfBoots:
+                cardScript = new ThreeOfBoots();
+                break;
+            case Cards.FiveOfBadges:
+                cardScript = new FiveOfBadges();
+                break;
+            case Cards.FourOfBadges:
+                cardScript = new FourOfBadges();
+                break;
         }
     }
 

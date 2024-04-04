@@ -24,6 +24,11 @@ public class GunScript : MonoBehaviour
     [SerializeField] InputAction reloadAction;
     Timer reloadTimer;
 
+
+
+    //For event data purposes
+    [HideInInspector] public float damageDealt;
+
     private void Awake()
     {
         stats.SetStats();
@@ -80,15 +85,16 @@ public class GunScript : MonoBehaviour
                 var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
                 if (healthScript != null)
                 {
+                    damageDealt = stats.damage.Value;
                     //Invoke events
-                    GenericHitEntity.Invoke(hitEntity, stats.damage.Value);
+                    GenericHitEntity.Invoke(hitEntity, damageDealt);
                     if (healthScript.type == EntityType.Enemy)
                     {
-                        GenericHitEnemy.Invoke(hitEntity, stats.damage.Value);
-                        BulletHitEnemy.Invoke(this, hitEntity, stats.damage.Value);
+                        GenericHitEnemy.Invoke(hitEntity, damageDealt);
+                        BulletHitEnemy.Invoke(this, hitEntity, damageDealt);
                     }
 
-                    healthScript.health -= stats.damage.Value;
+                    healthScript.health -= damageDealt;
                 }
             }
             else //If it doesn't hit anything

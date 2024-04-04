@@ -8,6 +8,7 @@ public class CardManager : MonoBehaviour
 {
     public List<Card> cards = new List<Card>();
     public PlayerController player;
+    [Range(0, 100)] public int debugStacks; //For testing purposes, how many stacks of a card you get
 
     private void Start()
     {
@@ -20,11 +21,15 @@ public class CardManager : MonoBehaviour
         if (cards.Where(x => x.cardName == card.cardName).Any())
         {
             var cardInList = cards.Find(x => x.cardName == card.cardName);
-            cardInList.stacks++;
-            CallCard(cardInList);
+            cardInList.stacks += debugStacks;
+            if (card.GetStats().cardType == CardType.Passive)
+            {
+                CallCard(cardInList);
+            }
         }
         else
         {
+            card.stacks = debugStacks;
             cards.Add(card);
             CallCard(cards[cards.Count - 1]);
         }
