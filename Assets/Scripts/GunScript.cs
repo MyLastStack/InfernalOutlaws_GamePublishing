@@ -18,7 +18,7 @@ public class GunScript : MonoBehaviour
     public GameObject bulletImpact;
     //public GameObject muzzleFlash;
     //public GameObject muzzleFlashPosition;
-    //AudioSource src;
+    AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
     [SerializeField] InputAction reloadAction;
@@ -32,7 +32,7 @@ public class GunScript : MonoBehaviour
     private void Awake()
     {
         stats.SetStats();
-        //src = GetComponent<AudioSource>();
+        src = GetComponent<AudioSource>();
         ammo = stats.maxAmmo.iValue;
         timer = new Timer(1f / stats.fireRate.Value + 0.001f);
         reloadTimer = new Timer(2);
@@ -61,7 +61,9 @@ public class GunScript : MonoBehaviour
             timer.SetMaxTime(1f / stats.fireRate.Value + 0.001f);
             GunFired.Invoke(this);
 
-            //src.Play();
+
+            src.pitch = Random.Range(0.95f, 1.05f);
+            src.Play();
 
             //Create ray to point towards
             RaycastHit hit;

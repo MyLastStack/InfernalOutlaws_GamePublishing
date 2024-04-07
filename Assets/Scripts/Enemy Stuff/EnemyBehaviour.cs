@@ -36,8 +36,11 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Update()
     {
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(player.transform.position, out navHit, 50f, NavMesh.GetAreaFromName("Humanoid"));
+
         //Follow player
-        agent.SetDestination(player.transform.position);
+        agent.SetDestination(navHit.position);
 
         //If player is in range, try to attack
         if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
