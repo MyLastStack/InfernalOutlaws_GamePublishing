@@ -447,6 +447,31 @@ public class FourOfBadges : Card
         GenericHitPlayer.AddListener(CallCard);
     }
 }
+public class JesterOfBullets : Card
+{
+    public override string cardName => "Jester of Bullets";
+
+    public void CallCard(GameObject player, float damage)
+    {
+        float baseModifier = 1;
+        for(int i = 0; i < stacks; i++)
+        {
+            baseModifier *= 2;
+            damage *= 2;
+        }
+
+        StatModifier mod = new StatModifier(baseModifier, ModifierType.PercentMult, cardName);
+        player.GetComponent<PlayerController>().gun.stats.damage.AddModifier(mod);
+        player.GetComponent<PlayerController>().damageRecieved = damage;
+    }
+
+    public override void SubscribeEvent()
+    {
+        StatModifier mod = new StatModifier(2, ModifierType.PercentMult, cardName);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().gun.stats.damage.AddModifier(mod);
+        GenericHitPlayer.AddListener(CallCard);
+    }
+}
 
 #endregion
 
@@ -471,5 +496,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     SheriffOfBoots,
     ThreeOfBoots,
     FiveOfBadges,
-    FourOfBadges
+    FourOfBadges,
+    JesterOfBullets
 }

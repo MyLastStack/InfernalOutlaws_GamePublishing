@@ -23,6 +23,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     Timer navMeshTimer; //How often the navmesh recalculates its destination
 
+    bool isStunned = false;
+
     private void Start()
     {
         attack.damage = damage;
@@ -40,19 +42,22 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void Update()
     {
-        navMeshTimer.Tick(Time.deltaTime);
+        if (!isStunned)
+        {
+            navMeshTimer.Tick(Time.deltaTime);
 
-        //If player is in range, try to attack
-        if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
-        {
-            attackTimer.Tick(Time.deltaTime);
-            //Rotate to look at the player
-            Quaternion rotation = Quaternion.LookRotation(player.gameObject.transform.position - transform.position);
-            transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
-        }
-        else //Otherwise reset attack timer back to its max
-        {
-            attackTimer.Reset();
+            //If player is in range, try to attack
+            if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
+            {
+                attackTimer.Tick(Time.deltaTime);
+                //Rotate to look at the player
+                Quaternion rotation = Quaternion.LookRotation(player.gameObject.transform.position - transform.position);
+                transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
+            }
+            else //Otherwise reset attack timer back to its max
+            {
+                attackTimer.Reset();
+            }
         }
 
         //If attacking, count down attack time left

@@ -93,6 +93,9 @@ public class CardPickup : MonoBehaviour
             case Cards.FourOfBadges:
                 cardScript = new FourOfBadges();
                 break;
+            case Cards.JesterOfBullets:
+                cardScript = new JesterOfBullets();
+                break;
         }
     }
 
