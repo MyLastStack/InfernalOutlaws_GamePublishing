@@ -6,6 +6,7 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
 using static EventManager;
+using TMPro;
 
 public class WaveManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class WaveManager : MonoBehaviour
     private List<GameObject> activeEnemies = new List<GameObject>();
 
     public float enemyStatModifer = 1; //Public for debugging & inspector purposes but should generally always start at 1
+
+    public TextMeshProUGUI waveCounterTMP;
  
 
     private void Start()
@@ -36,6 +39,7 @@ public class WaveManager : MonoBehaviour
     private void Update()
     {
         timer.Tick(Time.deltaTime);
+        waveCounterTMP.text = "Wave: " + currentWave;
     }
 
     public void SpawnEnemy()
