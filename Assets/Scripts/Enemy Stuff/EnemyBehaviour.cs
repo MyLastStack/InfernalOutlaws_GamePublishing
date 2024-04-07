@@ -21,6 +21,8 @@ public class EnemyBehaviour : MonoBehaviour
     public float damage;
     public EnemyAttack attack;
 
+    Timer navMeshTimer; //How often the navmesh recalculates its destination
+
     private void Start()
     {
         attack.damage = damage;
@@ -32,15 +34,13 @@ public class EnemyBehaviour : MonoBehaviour
         attackTimer.timerComplete.AddListener(StartAttack);
         attackDurationTimer = new Timer(attackDuration);
         attackDurationTimer.timerComplete.AddListener(EndAttack);
+        navMeshTimer = new Timer(0.2f);
+        navMeshTimer.timerComplete.AddListener(UpdateAgent);
     }
 
     private void Update()
     {
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(player.transform.position, out navHit, 50f, NavMesh.GetAreaFromName("Humanoid"));
-
-        //Follow player
-        agent.SetDestination(navHit.position);
+        navMeshTimer.Tick(Time.deltaTime);
 
         //If player is in range, try to attack
         if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
@@ -60,6 +60,16 @@ public class EnemyBehaviour : MonoBehaviour
         {
             attackDurationTimer.Tick(Time.deltaTime);
         }
+    }
+
+    void UpdateAgent()
+    {
+        navMeshTimer.Reset();
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(player.transform.position, out navHit, 50f, NavMesh.GetAreaFromName("Humanoid"));
+
+        //Follow player
+        agent.SetDestination(navHit.position);
     }
 
     private void StartAttack()
