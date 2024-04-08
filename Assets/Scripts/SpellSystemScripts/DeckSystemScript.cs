@@ -30,6 +30,7 @@ public class DeckSystemScript : MonoBehaviour
     [SerializeField] public Sprite fireBallSprite;
     [SerializeField] public Sprite lightningStrikeSprite;
     [SerializeField] public Sprite toxicCloudSprite;
+    [SerializeField] public Sprite revitilizeSprite;
 
     int spellCooldownDuration = 2;
     private bool isCooldown = false;
@@ -46,26 +47,26 @@ public class DeckSystemScript : MonoBehaviour
     #region Unique Spell Classes
     public class FireballSpell : Spell
     {
-        public GameObject fbPrefab;
+        public GameObject fireballPrefab;
         public override void Cast(GameObject spawnPoint)
         {
             var pos = spawnPoint.transform.position + spawnPoint.transform.forward;
             var rot = spawnPoint.transform.rotation;
-            Instantiate(fbPrefab, pos, rot);
+            Instantiate(fireballPrefab, pos, rot);
         }
     }
 
     public class LightningStrikeSpell : Spell
     {
         public Camera lsCam;
-        public GameObject lsPrefab;
+        public GameObject lightningStrikePrefab;
         public override void Cast(GameObject spawnPoint)
         {
             RaycastHit hit;
             if (Physics.Raycast(lsCam.transform.position, lsCam.transform.forward, out hit, 100f))
             {
                 Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Instantiate(lsPrefab, hit.point, rotation);
+                Instantiate(lightningStrikePrefab, hit.point, rotation);
             }
         }
     }
@@ -73,39 +74,44 @@ public class DeckSystemScript : MonoBehaviour
     public class ToxicCloudSpell : Spell
     {
         public Camera tcCam;
-        public GameObject tcPrefab;
+        public GameObject toxicCloudPrefab;
         public override void Cast(GameObject spawnPoint)
         {
             RaycastHit hit;
             if (Physics.Raycast(tcCam.transform.position, tcCam.transform.forward, out hit, 100f))
             {
                 Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
-                Instantiate(tcPrefab, hit.point, rotation);
+                Instantiate(toxicCloudPrefab, hit.point, rotation);
             }
         }
     }
 
-    public class RevitilizeSpell : Spell
+    public class Revitilize : Spell
     {
+        PlayerController playerHP;
         public override void Cast(GameObject spawnPoint)
         {
-            
+            playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+            playerHP.ps.health += 10f;
         }
     }
+
+    //public class 
     #endregion
 
     void Start()
     {
         FireballSpell fireballSpell = new FireballSpell();
-        fireballSpell.fbPrefab = fireBallPrefab;
+        fireballSpell.fireballPrefab = fireBallPrefab;
 
         LightningStrikeSpell lightningStrikeSpell = new LightningStrikeSpell();
         lightningStrikeSpell.lsCam = cam;
-        lightningStrikeSpell.lsPrefab = lightningStrikePrefab;
+        lightningStrikeSpell.lightningStrikePrefab = lightningStrikePrefab;
 
         ToxicCloudSpell toxicCloudSpell = new ToxicCloudSpell();
         toxicCloudSpell.tcCam = cam;
-        toxicCloudSpell.tcPrefab = toxicCloudPrefab;
+        toxicCloudSpell.toxicCloudPrefab = toxicCloudPrefab;
 
         totalSpells.Add(fireballSpell);
         totalSpells.Add(lightningStrikeSpell);

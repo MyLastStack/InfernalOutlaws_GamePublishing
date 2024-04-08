@@ -18,7 +18,7 @@ public class ToxicCloud : MonoBehaviour
 
     void Start()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
         initialScale = transform.localScale;
         startTime = Time.time;
@@ -52,7 +52,7 @@ public class ToxicCloud : MonoBehaviour
             {
                 timer.Reset();
 
-                enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+                enemyGO.health -= damageDeal /** (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue)*/;
             }
         }
     }

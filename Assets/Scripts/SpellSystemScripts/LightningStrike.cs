@@ -16,7 +16,7 @@ public class LightningStrike : MonoBehaviour
 
     void Start()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
         initialScale = transform.localScale;
         startTime = Time.time;
@@ -28,7 +28,7 @@ public class LightningStrike : MonoBehaviour
 
         progress = Mathf.Clamp01(progress);
 
-        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, initialScale.y, targetScale), progress);
+        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale), progress);
 
         transform.localScale = newScale;
 
@@ -44,7 +44,7 @@ public class LightningStrike : MonoBehaviour
 
         if (enemyGO != null)
         {
-            enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+            enemyGO.health -= damageDeal /** (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue)*/;
         }
     }
 }
