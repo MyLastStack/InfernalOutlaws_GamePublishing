@@ -11,7 +11,7 @@ public class Fireball : MonoBehaviour
     Rigidbody rb;
     void Start()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        //playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
         rb = GetComponent<Rigidbody>();
         rb.velocity = transform.forward * 100f;
