@@ -324,6 +324,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 088389c6460e1db41a21c038a9b5ab89, type: 2}
   - {fileID: 11400000, guid: 81fce447327fdf246bc83ade15362c3d, type: 2}
   - {fileID: 11400000, guid: 8279a3a5b0a51eb4f96c684ea6c97feb, type: 2}
+  - {fileID: 11400000, guid: f8c4be19b5b53234b8415f45dd04dcb2, type: 2}
   titleText: {fileID: 1403709537559306306}
   descriptionText: {fileID: 1319179569268786907}
   image: {fileID: 5887505110451745695}
