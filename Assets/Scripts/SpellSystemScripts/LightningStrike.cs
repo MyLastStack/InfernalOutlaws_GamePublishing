@@ -28,7 +28,7 @@ public class LightningStrike : MonoBehaviour
 
         progress = Mathf.Clamp01(progress);
 
-        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, initialScale.y, targetScale), progress);
+        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale), progress);
 
         transform.localScale = newScale;
 

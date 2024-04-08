@@ -25,7 +25,6 @@ public class DeckSystemScript : MonoBehaviour
     [SerializeField] public GameObject fireBallPrefab;
     [SerializeField] public GameObject lightningStrikePrefab;
     [SerializeField] public GameObject toxicCloudPrefab;
-    [SerializeField] public GameObject revitilizePrefab;
 
     [Header("Spell Sprites")]
     [SerializeField] public Sprite fireBallSprite;
@@ -97,6 +96,8 @@ public class DeckSystemScript : MonoBehaviour
             playerHP.ps.health += 10f;
         }
     }
+
+    //public class 
     #endregion
 
     void Start()
