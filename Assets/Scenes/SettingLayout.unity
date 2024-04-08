@@ -16245,7 +16245,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c9011720f88982f4cb16ded5be683162, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.509
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -18335,8 +18335,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   songSelection:
-  - {fileID: 8300000, guid: ddab6c490f11fa4498b3b751d9c3969b, type: 3}
   - {fileID: 8300000, guid: 9f5017426d96a1c44ab8c0d2ad6212e5, type: 3}
+  - {fileID: 8300000, guid: ddab6c490f11fa4498b3b751d9c3969b, type: 3}
+  - {fileID: 8300000, guid: 4f77086a7bf8320438d4fcbfaf0bbc52, type: 3}
+  - {fileID: 8300000, guid: 3cc3358c26c57034e91d7f932fc104e5, type: 3}
+  - {fileID: 8300000, guid: f4dba4a4f08d07248a2de794cf80fd4e, type: 3}
+  - {fileID: 8300000, guid: 59cc9d1991254a64a811b4933c5d4b5b, type: 3}
+  fadeDuration: 2
+  startVolume: 0.35
 --- !u!1001 &1621559710
 PrefabInstance:
   m_ObjectHideFlags: 0

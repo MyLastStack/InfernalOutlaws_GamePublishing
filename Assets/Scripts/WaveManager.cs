@@ -45,7 +45,7 @@ public class WaveManager : MonoBehaviour
     public void SpawnEnemy()
     {
         currentEnemy++;
-        if (currentEnemy >= currentWaveEnemies.Count) //If the player is on the last enemy of the wave, go to the next wave
+        if (currentEnemy > currentWaveEnemies.Count) //If the player is on the last enemy of the wave, go to the next wave
         {
             activeEnemies.RemoveAll(x => x == null || !x.activeSelf);
             if (activeEnemies.Count == 0)
