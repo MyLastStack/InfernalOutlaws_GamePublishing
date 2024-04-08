@@ -1,3 +1,4 @@
+using MagicPigGames;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,12 +9,33 @@ using static EventManager;
 public class HealthScript : MonoBehaviour
 {
     public float health;
-    public TextMeshProUGUI healthText;
+    public HorizontalProgressBar bar;
     public EntityType type;
+    public float maxHealth;
+
+    private void Start()
+    {
+        maxHealth = health;
+    }
 
     private void Update()
     {
-        healthText.text = Math.Round(health, 2).ToString();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (health == maxHealth)
+        {
+            bar.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (Vector3.Distance(player.transform.position, gameObject.transform.position) < 25)
+            {
+                bar.gameObject.SetActive(true);
+            }
+            else
+            {
+                bar.gameObject.SetActive(false);
+            }
+        }
         if (health <= 0)
         {
             EntityDeath.Invoke(gameObject);
@@ -26,6 +48,10 @@ public class HealthScript : MonoBehaviour
             {
                 PlayerDeath.Invoke(gameObject);
             }
+        }
+        else
+        {
+            bar.SetProgress(health / maxHealth);
         }
     }
 }
