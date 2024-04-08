@@ -23328,6 +23328,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7638384858405186824, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
+      propertyPath: groundDist
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7638384858405186824, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: layerMask.m_Bits
       value: 119
       objectReference: {fileID: 0}
