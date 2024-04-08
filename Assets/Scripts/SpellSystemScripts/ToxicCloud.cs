@@ -52,7 +52,7 @@ public class ToxicCloud : MonoBehaviour
             {
                 timer.Reset();
 
-                enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+                enemyGO.health -= damageDeal /** (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue)*/;
             }
         }
     }

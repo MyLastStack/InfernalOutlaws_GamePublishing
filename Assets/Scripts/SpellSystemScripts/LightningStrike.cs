@@ -44,7 +44,7 @@ public class LightningStrike : MonoBehaviour
 
         if (enemyGO != null)
         {
-            enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+            enemyGO.health -= damageDeal /** (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue)*/;
         }
     }
 }

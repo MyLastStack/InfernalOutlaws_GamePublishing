@@ -432,9 +432,11 @@ MonoBehaviour:
   fireBallPrefab: {fileID: 1655957243836950078, guid: cac47699382029b4ebb0ffb8d0f92cd6, type: 3}
   lightningStrikePrefab: {fileID: 4569447600786503681, guid: 108725ab8f55b024f827db347386010b, type: 3}
   toxicCloudPrefab: {fileID: 8015528545670975801, guid: 08c9fda28eb30ed489d7682a55e63b29, type: 3}
+  revitilizePrefab: {fileID: 0}
   fireBallSprite: {fileID: 0}
   lightningStrikeSprite: {fileID: 0}
   toxicCloudSprite: {fileID: 0}
+  revitilizeSprite: {fileID: 0}
 --- !u!1 &1431660988
 GameObject:
   m_ObjectHideFlags: 0
