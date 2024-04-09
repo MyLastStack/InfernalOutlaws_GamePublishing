@@ -13,15 +13,18 @@ public class RangedEnemyBehaviour : MonoBehaviour
     [SerializeField] GameObject enemyProjectilePrefab;
     public float attackRange;
 
-    public float attackTimer;
-    float loadTimer;
+    Timer attackTimer;
+    public float attackCooldown;
+
+    public float damage = 5;
+    public int projectiles = 8;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         agent = GetComponent<NavMeshAgent>();
 
-        loadTimer = 5f;
-        attackTimer = loadTimer;
+        attackTimer = new Timer(attackCooldown);
+        attackTimer.timerComplete.AddListener(SpawnProjectiles);
     }
 
     void Update()
@@ -42,30 +45,24 @@ public class RangedEnemyBehaviour : MonoBehaviour
         
         if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
         {
-            if (attackTimer <= 0)
-            {
-                SpawnProjectiles();
-                attackTimer = loadTimer;
-            }
-        }
-
-        if (attackTimer > 0)
-        {
-            attackTimer -= Time.deltaTime;
+            attackTimer.Tick(Time.deltaTime);
         }
     }
 
     private void SpawnProjectiles()
     {
+        attackTimer.Reset();
         float maxDeviationAngle = 10f;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < projectiles; i++)
         {
             float deviationAngle = Random.Range(-maxDeviationAngle, maxDeviationAngle);
 
             Quaternion randomRotation = Quaternion.Euler(deviationAngle, deviationAngle, 0) * aimPoint.transform.rotation;
 
-            Instantiate(enemyProjectilePrefab, aimPoint.transform.position, randomRotation);
+            GameObject proj = Instantiate(enemyProjectilePrefab, aimPoint.transform.position, randomRotation);
+
+            proj.GetComponent<EnemyAttack>().damage = damage;
         }
     }
 }

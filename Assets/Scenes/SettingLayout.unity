@@ -23796,6 +23796,14 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
+      propertyPath: waves.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
+      propertyPath: enemyPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 8555237352769449408, guid: 718b572f815dc8d42b0e49d4f36ce165, type: 3}
+    - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
       propertyPath: waves.Array.data[0].enemies.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -23808,8 +23816,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
+      propertyPath: waves.Array.data[4].enemies.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
       propertyPath: waves.Array.data[0].enemies.Array.data[1]
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408828594424117625, guid: 3b7e23be6faa0a449bb2854f9276ac2c, type: 3}
+      propertyPath: waves.Array.data[4].enemies.Array.data[0]
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
