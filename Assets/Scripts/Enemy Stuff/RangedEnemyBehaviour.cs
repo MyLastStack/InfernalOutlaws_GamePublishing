@@ -16,6 +16,9 @@ public class RangedEnemyBehaviour : MonoBehaviour
     Timer attackTimer;
     public float attackCooldown;
 
+    Timer agentUpdateTimer;
+    private float refreshRate = 0.2f;
+
     public float damage = 5;
     public int projectiles = 8;
     void Start()
@@ -25,13 +28,16 @@ public class RangedEnemyBehaviour : MonoBehaviour
 
         attackTimer = new Timer(attackCooldown);
         attackTimer.timerComplete.AddListener(SpawnProjectiles);
+
+        agentUpdateTimer = new Timer(refreshRate);
+        agentUpdateTimer.timerComplete.AddListener(UpdateAgent);
     }
 
     void Update()
     {
         aimPoint.LookAt(player.transform);
 
-        agent.SetDestination(player.transform.position);
+        agentUpdateTimer.Tick(Time.deltaTime);
 
         Vector3 direction = (player.transform.position - transform.position).normalized;
 
@@ -64,5 +70,15 @@ public class RangedEnemyBehaviour : MonoBehaviour
 
             proj.GetComponent<EnemyAttack>().damage = damage;
         }
+    }
+
+    void UpdateAgent()
+    {
+        agentUpdateTimer.Reset();
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(player.transform.position, out navHit, 50f, NavMesh.GetAreaFromName("Humanoid"));
+
+        //Follow player
+        agent.SetDestination(navHit.position);
     }
 }
