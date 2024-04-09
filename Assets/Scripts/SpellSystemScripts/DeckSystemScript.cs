@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
 public class DeckSystemScript : MonoBehaviour
 {
@@ -25,22 +26,49 @@ public class DeckSystemScript : MonoBehaviour
     [SerializeField] public GameObject fireBallPrefab;
     [SerializeField] public GameObject lightningStrikePrefab;
     [SerializeField] public GameObject toxicCloudPrefab;
+    [SerializeField] public GameObject warpedWorldPrefab;
 
     [Header("Spell Sprites")]
     [SerializeField] public Sprite fireBallSprite;
     [SerializeField] public Sprite lightningStrikeSprite;
     [SerializeField] public Sprite toxicCloudSprite;
     [SerializeField] public Sprite revitilizeSprite;
+    [SerializeField] public Sprite warpedWorldSprite;
 
     int spellCooldownDuration = 2;
     private bool isCooldown = false;
+
+    [Header("Object References")]
+    public GameObject cardSlotOne;
+    public GameObject cardSlotTwo;
+    public GameObject cardSlotThree;
+    public Image csOne;
+    public Image csTwo;
+    public Image csThree;
+
+    FireballSpell fireballSpell;
+    LightningStrikeSpell lightningStrikeSpell;
+    ToxicCloudSpell toxicCloudSpell;
+    RevitilizeSpell revitilizeSpell;
+    WarpedWorldSpell warpedWorldSpell;
 
     #region Base Spell Class
     [Serializable]
     public class Spell
     {
         // Spell Template
+        protected Sprite spellSprite;
+
+        public Spell(Sprite sprite)
+        {
+            spellSprite = sprite;
+        }
+
         public virtual void Cast(GameObject spawnPoint) { }
+        public virtual Sprite SpellSprite
+        {
+            get { return spellSprite; }
+        }
     }
     #endregion
 
@@ -48,6 +76,11 @@ public class DeckSystemScript : MonoBehaviour
     public class FireballSpell : Spell
     {
         public GameObject fireballPrefab;
+
+        public FireballSpell(Sprite sprite) : base(sprite)
+        {
+        }
+
         public override void Cast(GameObject spawnPoint)
         {
             var pos = spawnPoint.transform.position + spawnPoint.transform.forward;
@@ -60,6 +93,11 @@ public class DeckSystemScript : MonoBehaviour
     {
         public Camera lsCam;
         public GameObject lightningStrikePrefab;
+
+        public LightningStrikeSpell(Sprite sprite) : base(sprite)
+        { 
+        }
+
         public override void Cast(GameObject spawnPoint)
         {
             RaycastHit hit;
@@ -75,6 +113,11 @@ public class DeckSystemScript : MonoBehaviour
     {
         public Camera tcCam;
         public GameObject toxicCloudPrefab;
+
+        public ToxicCloudSpell(Sprite sprite) : base(sprite)
+        {
+        }
+
         public override void Cast(GameObject spawnPoint)
         {
             RaycastHit hit;
@@ -86,9 +129,14 @@ public class DeckSystemScript : MonoBehaviour
         }
     }
 
-    public class Revitilize : Spell
+    public class RevitilizeSpell : Spell
     {
         PlayerController playerHP;
+
+        public RevitilizeSpell(Sprite sprite) : base(sprite)
+        {
+        }
+
         public override void Cast(GameObject spawnPoint)
         {
             playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -97,21 +145,30 @@ public class DeckSystemScript : MonoBehaviour
         }
     }
 
-    //public class 
+    public class WarpedWorldSpell: Spell
+    {
+        public Camera wwCam;
+        public GameObject warpedWorldPrefab;
+
+        public WarpedWorldSpell(Sprite sprite) : base(sprite)
+        {
+        }
+
+        public override void Cast(GameObject spawnPoint)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(wwCam.transform.position, wwCam.transform.forward, out hit, 100f))
+            {
+                Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
+                Instantiate(warpedWorldPrefab, hit.point, rotation);
+            }
+        }
+    }
     #endregion
 
     void Start()
     {
-        FireballSpell fireballSpell = new FireballSpell();
-        fireballSpell.fireballPrefab = fireBallPrefab;
-
-        LightningStrikeSpell lightningStrikeSpell = new LightningStrikeSpell();
-        lightningStrikeSpell.lsCam = cam;
-        lightningStrikeSpell.lightningStrikePrefab = lightningStrikePrefab;
-
-        ToxicCloudSpell toxicCloudSpell = new ToxicCloudSpell();
-        toxicCloudSpell.tcCam = cam;
-        toxicCloudSpell.toxicCloudPrefab = toxicCloudPrefab;
+        SpellSetup();
 
         totalSpells.Add(fireballSpell);
         totalSpells.Add(lightningStrikeSpell);
@@ -133,6 +190,64 @@ public class DeckSystemScript : MonoBehaviour
                 SpellCasting();
             }
         }
+
+        // Visuals
+        for (int i = 0; i < 3; i++)
+        {
+            if (i < shuffledSpells.Count)
+            {
+                switch (i)
+                {
+                    case 0:
+                        cardSlotOne.SetActive(true);
+                        csOne.sprite = shuffledSpells[i].SpellSprite;
+                        break;
+                    case 1:
+                        cardSlotTwo.SetActive(true);
+                        csTwo.sprite = shuffledSpells[i].SpellSprite;
+                        break;
+                    case 2:
+                        cardSlotThree.SetActive(true);
+                        csThree.sprite = shuffledSpells[i].SpellSprite;
+                        break;
+                }
+            }
+            else
+            {
+                switch (i)
+                {
+                    case 0:
+                        cardSlotOne.SetActive(false);
+                        break;
+                    case 1:
+                        cardSlotTwo.SetActive(false);
+                        break;
+                    case 2:
+                        cardSlotThree.SetActive(false);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void SpellSetup()
+    {
+        fireballSpell = new FireballSpell(fireBallSprite);
+        fireballSpell.fireballPrefab = fireBallPrefab;
+
+        lightningStrikeSpell = new LightningStrikeSpell(lightningStrikeSprite);
+        lightningStrikeSpell.lsCam = cam;
+        lightningStrikeSpell.lightningStrikePrefab = lightningStrikePrefab;
+
+        toxicCloudSpell = new ToxicCloudSpell(toxicCloudSprite);
+        toxicCloudSpell.tcCam = cam;
+        toxicCloudSpell.toxicCloudPrefab = toxicCloudPrefab;
+
+        revitilizeSpell = new RevitilizeSpell(revitilizeSprite);
+
+        warpedWorldSpell = new WarpedWorldSpell(warpedWorldSprite);
+        warpedWorldSpell.wwCam = cam;
+        warpedWorldSpell.warpedWorldPrefab = warpedWorldPrefab;
     }
 
     public void ShuffleDeck(List<Spell> shuffling)
