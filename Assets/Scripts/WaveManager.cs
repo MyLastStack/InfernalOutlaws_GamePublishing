@@ -68,6 +68,11 @@ public class WaveManager : MonoBehaviour
             {
                 enemyScript.damage *= enemyStatModifer;
             }
+            RangedEnemyBehaviour rangedEnemyScript = spawnedEnemy.GetComponent<RangedEnemyBehaviour>();
+            if(rangedEnemyScript != null)
+            {
+                rangedEnemyScript.damage *= enemyStatModifer;
+            }
             HealthScript health = spawnedEnemy.GetComponent<HealthScript>();
             if(health != null)
             {

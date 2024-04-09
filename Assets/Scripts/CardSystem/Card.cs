@@ -213,6 +213,21 @@ public class ThreeOfBoots : Card
         player.ps.dashMaxMagnitudeStat.AddModifier(modifier);
     }
 }
+public class TenOfBadges : Card
+{
+    public override string cardName => "Ten of Badges";
+
+    public override void CallCard(PlayerController player)
+    {
+        float baseVal = 1;
+        for (int i = 0; i < stacks; i++)
+        {
+            baseVal *= 0.75f;
+        }
+        StatModifier mod = new StatModifier(baseVal - 1, ModifierType.PercentAdd, cardName);
+        player.gun.stats.spread.AddModifier(mod);
+    }
+}
 
 #endregion
 
@@ -497,5 +512,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     ThreeOfBoots,
     FiveOfBadges,
     FourOfBadges,
-    JesterOfBullets
+    JesterOfBullets,
+    TenOfBadges
 }

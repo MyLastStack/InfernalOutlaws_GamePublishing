@@ -151,6 +151,7 @@ public class Stat
                 }
             }
         }
+        Mathf.Max(0.01f, tempValue);
 
         return (float)Math.Round(tempValue, 4);
     }
