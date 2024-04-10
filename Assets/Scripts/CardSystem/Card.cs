@@ -620,6 +620,43 @@ public class DeputyOfLassos : Card
         }
     }
 }
+public class DeputyOfBoots : Card
+{
+    public override string cardName => "Deputy of Boots";
+    Timer timer;
+    Timer abilityCooldown;
+
+    public void CallCard(GameObject player, float damage)
+    {
+        timer.Reset();
+        timer.Pause();
+        abilityCooldown.Reset();
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitPlayer.AddListener(CallCard);
+        GenericHitEnemy.AddListener(CallCard);
+        timer = new Timer(1f);
+        timer.Pause();
+        abilityCooldown = new Timer(10f);
+    }
+
+    public override void Update()
+    {
+        abilityCooldown.Tick(Time.deltaTime);
+        if(abilityCooldown.IsDone())
+        {
+            timer.Unpause();
+        }
+        timer.Tick(Time.deltaTime);
+        if(timer.IsDone())
+        {
+            timer.Reset();
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ps.health += (1 * stacks);
+        }
+    }
+}
 
 #endregion
 
@@ -649,5 +686,6 @@ public enum Cards //After making a card, make sure to add its name to this list
     TenOfBadges,
     NineOfBadges,
     SheriffOfLassos,
-    DeputyOfLassos
+    DeputyOfLassos,
+    DeputyOfBoots
 }

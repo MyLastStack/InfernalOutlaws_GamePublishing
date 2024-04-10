@@ -108,6 +108,9 @@ public class CardPickup : MonoBehaviour
             case Cards.DeputyOfLassos:
                 cardScript = new DeputyOfLassos();
                 break;
+            case Cards.DeputyOfBoots:
+                cardScript = new DeputyOfBoots();
+                break;
         }
     }
 
