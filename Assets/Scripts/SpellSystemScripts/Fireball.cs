@@ -9,12 +9,13 @@ public class Fireball : MonoBehaviour
     private PlayerController playerScript;
 
     Rigidbody rb;
+
     void Start()
     {
-        //playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
         rb = GetComponent<Rigidbody>();
-        rb.velocity = transform.forward * 100f;
+        rb.velocity = transform.forward * 50f;
     }
 
     void Update()
@@ -22,13 +23,16 @@ public class Fireball : MonoBehaviour
         Destroy(gameObject, 10f);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        HealthScript enemyGO = collision.gameObject.GetComponent<HealthScript>();
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ignore Raycast"))
+            return;
+
+        HealthScript enemyGO = other.gameObject.GetComponent<HealthScript>();
 
         if (enemyGO != null)
         {
-            enemyGO.health -= damageDeal /** (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue)*/;
+            enemyGO.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
         }
 
         Destroy(gameObject);

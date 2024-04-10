@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 125667072764540042}
   - component: {fileID: 2307264397930267830}
   - component: {fileID: 2315741913537669982}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: EnemyProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,6 +305,10 @@ PrefabInstance:
     - target: {fileID: 6146545414153545494, guid: 61753401622c2a947a30e2147430e97d, type: 3}
       propertyPath: m_Name
       value: Spheres Explode
+      objectReference: {fileID: 0}
+    - target: {fileID: 6146545414153545494, guid: 61753401622c2a947a30e2147430e97d, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6146545414153545499, guid: 61753401622c2a947a30e2147430e97d, type: 3}
       propertyPath: m_LocalScale.x

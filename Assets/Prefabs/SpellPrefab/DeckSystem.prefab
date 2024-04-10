@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6493277924816528770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6401057560745545835}
+  - component: {fileID: 5998564248105631414}
+  m_Layer: 0
+  m_Name: DeckSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6401057560745545835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493277924816528770}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5998564248105631414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6493277924816528770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88604d0bd6789444fae80fa0688ebc09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input1:
+    m_Name: Input 1
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: fcfd8aa4-b1bf-436c-b683-0ef37295ac04
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 569c1711-e538-47df-82a9-5fc9e995133a
+      m_Path: <Keyboard>/1
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input 1
+      m_Flags: 0
+    m_Flags: 0
+  input2:
+    m_Name: Input 2
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: a6fda06a-97ab-4903-a258-7f77f3902b59
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: d6402af0-5419-4c67-8781-cf7f4bb25162
+      m_Path: <Keyboard>/2
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input 2
+      m_Flags: 0
+    m_Flags: 0
+  input3:
+    m_Name: Input 3
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 66f40b6a-1aea-442c-8e50-1243dfa06834
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 244f3c7f-0d09-4766-b612-84328a88e590
+      m_Path: <Keyboard>/3
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Input 3
+      m_Flags: 0
+    m_Flags: 0
+  totalSpells: []
+  shuffledSpells: []
+  cam: {fileID: 0}
+  spellSpawnArea: {fileID: 0}
+  fireBallPrefab: {fileID: 1655957243836950078, guid: cac47699382029b4ebb0ffb8d0f92cd6, type: 3}
+  lightningStrikePrefab: {fileID: 5504318401396985548, guid: 108725ab8f55b024f827db347386010b, type: 3}
+  toxicCloudPrefab: {fileID: 8015528545670975801, guid: 08c9fda28eb30ed489d7682a55e63b29, type: 3}
+  warpedWorldPrefab: {fileID: 4133551369734092712, guid: 6ac0caeb3ad14554a8e3e9d9caf367b7, type: 3}
+  fireBallSprite: {fileID: 21300000, guid: 475a76356b347cd4d8d059e4ee8f57f6, type: 3}
+  lightningStrikeSprite: {fileID: 21300000, guid: 99d37d12dcd2666429fe49ae429ef990, type: 3}
+  toxicCloudSprite: {fileID: 21300000, guid: a9614b1a59822274eaaa4e07f118cd90, type: 3}
+  revitilizeSprite: {fileID: 21300000, guid: 565a8a23d26f0dd42a6ba50426da7e46, type: 3}
+  warpedWorldSprite: {fileID: 21300000, guid: 109d39ae08c9dc3428ec3a56803bcb5b, type: 3}
+  cardSlotOne: {fileID: 0}
+  cardSlotTwo: {fileID: 0}
+  cardSlotThree: {fileID: 0}
+  csOne: {fileID: 0}
+  csTwo: {fileID: 0}
+  csThree: {fileID: 0}
