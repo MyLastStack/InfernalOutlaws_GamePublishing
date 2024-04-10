@@ -99,6 +99,12 @@ public class CardPickup : MonoBehaviour
             case Cards.TenOfBadges:
                 cardScript = new TenOfBadges();
                 break;
+            case Cards.NineOfBadges:
+                cardScript = new NineOfBadges();
+                break;
+            case Cards.SheriffOfLassos:
+                cardScript = new SheriffOfLassos();
+                break;
         }
     }
 
