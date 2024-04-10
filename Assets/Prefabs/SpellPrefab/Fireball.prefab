@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9120710320948858700}
   - component: {fileID: 3287246011502717085}
   - component: {fileID: 5812516821844365110}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: Fireball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 1109759481196739387}
   - component: {fileID: 5970778844056967601}
   - component: {fileID: 6552924075351478908}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: FireballModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
