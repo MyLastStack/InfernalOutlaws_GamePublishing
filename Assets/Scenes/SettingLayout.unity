@@ -23629,7 +23629,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1535323385908566158, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: debugStacks
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1941642527104265619, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: m_fontSize
