@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using static EventManager;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// A class that handles the functionality of cards in the game
@@ -82,7 +83,6 @@ public class TwoOfBullets : Card
         player.gun.stats.fireRate.AddModifier(modifier);
     }
 }
-
 public class ThreeOfBullets : Card
 {
     public override string cardName => "Three of Bullets";
@@ -93,7 +93,6 @@ public class ThreeOfBullets : Card
         player.gun.stats.damage.AddModifier(modifier);
     }
 }
-
 public class FourOfBullets : Card
 {
     public override string cardName => "Four of Bullets";
@@ -104,7 +103,6 @@ public class FourOfBullets : Card
         player.gun.stats.damage.AddModifier(modifier);
     }
 }
-
 public class AceOfBoots : Card
 {
     public override string cardName => "Ace of Boots";
@@ -115,7 +113,6 @@ public class AceOfBoots : Card
         player.ps.jumpPowerStat.AddModifier(modifier);
     }
 }
-
 public class FourOfLassos : Card
 {
     public override string cardName => "Four of Lassos";
@@ -136,7 +133,6 @@ public class FourOfLassos : Card
         player.gun.stats.fireRate.AddModifier(modifier2);
     }
 }
-
 public class EightOfBadges : Card
 {
     public override string cardName => "Eight of Badges";
@@ -152,7 +148,6 @@ public class EightOfBadges : Card
         player.ps.shieldCooldownStat.AddModifier(modifier);
     }
 }
-
 public class SevenOfLassos : Card
 {
     public override string cardName => "Seven of Lassos";
@@ -164,7 +159,6 @@ public class SevenOfLassos : Card
         player.ps.health += 10;
     }
 }
-
 public class SixOfBadges : Card
 {
     public override string cardName => "Six of Badges";
@@ -175,7 +169,6 @@ public class SixOfBadges : Card
         player.ps.maxShieldStat.AddModifier(modifier);
     }
 }
-
 public class ThreeOfLassos : Card
 {
     public override string cardName => "Three of Lassos";
@@ -186,7 +179,6 @@ public class ThreeOfLassos : Card
         player.ps.shieldRegenSpeedStat.AddModifier(modifier);
     }
 }
-
 public class DeputyOfBullets : Card
 {
     public override string cardName => "Deputy of Bullets";
@@ -199,7 +191,6 @@ public class DeputyOfBullets : Card
         player.gun.stats.damage.AddModifier(modifier);
     }
 }
-
 public class ThreeOfBoots : Card
 {
     public override string cardName => "Three of Boots";
@@ -252,15 +243,14 @@ public class TestCard : Card
         Jump.AddListener(CallCard);
     }
 }
-
 public class OutlawOfBullets : Card
 {
-    public override string cardName => "Outlaw of Bullets"; //Make sure there is a card asset that corresponds to this in Resources/ScriptableObjects/Cards
+    public override string cardName => "Outlaw of Bullets";
 
     public void CallCard(GameObject obj)
     {
         PlayerController player = obj.GetComponent<PlayerController>();
-        StatModifier modifier = new StatModifier(0.30f + (0.15f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        StatModifier modifier = new StatModifier(0.50f * stacks, ModifierType.PercentAdd, cardName);
         player.gun.stats.fireRate.AddModifier(modifier);
     }
 
@@ -309,7 +299,6 @@ public class ThreeOfBadges : Card
         }
     }
 }
-
 public class OutlawOfBadges : Card
 {
     public override string cardName => "Outlaw of Badges";
@@ -325,7 +314,6 @@ public class OutlawOfBadges : Card
         EnemyDeath.AddListener(CallCard);
     }
 }
-
 public class SheriffOfBullets : Card
 {
     public override string cardName => "Sheriff of Bullets";
@@ -353,7 +341,6 @@ public class SheriffOfBullets : Card
         GenericHitPlayer.AddListener(ResetCount);
     }
 }
-
 public class NineOfLassos : Card
 {
     public override string cardName => "Nine of Lassos";
@@ -380,7 +367,6 @@ public class NineOfLassos : Card
         EnemyDeath.AddListener(CallCard);
     }
 }
-
 public class SheriffOfBoots : Card
 {
     public override string cardName => "Sheriff of Boots";
@@ -407,7 +393,6 @@ public class SheriffOfBoots : Card
         Land.AddListener(CallCard);
     }
 }
-
 public class FiveOfBadges : Card
 {
     public override string cardName => "Five of Badges";
@@ -432,7 +417,6 @@ public class FiveOfBadges : Card
         GenericHitPlayer.AddListener(CallCard);
     }
 }
-
 public class FourOfBadges : Card
 {
     public override string cardName => "Four of Badges";
@@ -469,7 +453,7 @@ public class JesterOfBullets : Card
     public void CallCard(GameObject player, float damage)
     {
         float baseModifier = 1;
-        for(int i = 0; i < stacks; i++)
+        for (int i = 0; i < stacks; i++)
         {
             baseModifier *= 2;
             damage *= 2;
@@ -485,6 +469,81 @@ public class JesterOfBullets : Card
         StatModifier mod = new StatModifier(2, ModifierType.PercentMult, cardName);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().gun.stats.damage.AddModifier(mod);
         GenericHitPlayer.AddListener(CallCard);
+    }
+}
+public class NineOfBadges : Card
+{
+    public override string cardName => "Nine of Badges";
+
+    private Timer invFrames;
+
+    public void CallCard(GameObject player, float damage)
+    {
+        PlayerController playerScript = player.GetComponent<PlayerController>();
+        if (invFrames.IsDone())
+        {
+            invFrames.SetMaxTime(0.5f * stacks);
+            invFrames.Reset();
+        }
+        else
+        {
+            player.GetComponent<PlayerController>().damageRecieved = 0;
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitPlayer.AddListener(CallCard);
+        invFrames = new Timer(0.5f);
+        invFrames.SetTime(0);
+    }
+
+    public override void Update()
+    {
+        if (invFrames != null)
+        {
+            invFrames.Tick(Time.deltaTime);
+        }
+    }
+}
+public class SheriffOfLassos : Card
+{
+    public override string cardName => "Sheriff of Lassos";
+    private const float MAX_VAL = 0.85f;
+    public PlayerController playerScript;
+    private GameObject prefab;
+
+    public void CallCard(GameObject enemy)
+    {
+        float chance = 0;
+        for(int i = 0; i < stacks; i++)
+        {
+            chance += (MAX_VAL - chance + 0.001f) / 10;
+            chance = Mathf.Min(chance, MAX_VAL);
+        }
+
+        float value = Random.Range(0f, 1f);
+        if(value < chance)
+        {
+            List<HealthScript> nearbyDamageables = Physics.OverlapSphere(enemy.transform.position, 5)
+            .Where(x => x.gameObject.GetComponent<HealthScript>() != null)
+            .Select(x => x.gameObject.GetComponent<HealthScript>()).ToList();
+
+            foreach (HealthScript health in nearbyDamageables)
+            {
+                health.health -= (10 + (7 * (stacks - 1))) * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+            }
+
+            GameObject instance = GameObject.Instantiate(prefab);
+            instance.transform.position = enemy.transform.position;
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        EnemyDeath.AddListener(CallCard);
+        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        prefab = (GameObject)Resources.Load("Prefabs/Explosion Fire", typeof(GameObject));
     }
 }
 
@@ -513,5 +572,7 @@ public enum Cards //After making a card, make sure to add its name to this list
     FiveOfBadges,
     FourOfBadges,
     JesterOfBullets,
-    TenOfBadges
+    TenOfBadges,
+    NineOfBadges,
+    SheriffOfLassos
 }
