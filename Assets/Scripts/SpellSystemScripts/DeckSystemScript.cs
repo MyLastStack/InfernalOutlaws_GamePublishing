@@ -171,10 +171,13 @@ public class DeckSystemScript : MonoBehaviour
         SpellSetup();
 
         totalSpells.Add(fireballSpell);
+        totalSpells.Add(fireballSpell);
+        totalSpells.Add(lightningStrikeSpell);
         totalSpells.Add(lightningStrikeSpell);
         totalSpells.Add(toxicCloudSpell);
-        totalSpells.Add(lightningStrikeSpell);
-        totalSpells.Add(fireballSpell);
+        totalSpells.Add(toxicCloudSpell);
+        totalSpells.Add(revitilizeSpell);
+        totalSpells.Add(warpedWorldSpell);
     }
 
     void Update()
