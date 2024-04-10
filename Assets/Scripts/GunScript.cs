@@ -18,12 +18,14 @@ public class GunScript : MonoBehaviour
     public GameObject bulletImpact;
     //public GameObject muzzleFlash;
     //public GameObject muzzleFlashPosition;
-    //AudioSource src;
+    AudioSource src;
     public Camera cam;
     [SerializeField] InputAction fireAction;
     [SerializeField] InputAction reloadAction;
     Timer reloadTimer;
 
+    LineRenderer line;
+    Timer lineTimer;
 
 
     //For event data purposes
@@ -32,11 +34,14 @@ public class GunScript : MonoBehaviour
     private void Awake()
     {
         stats.SetStats();
-        //src = GetComponent<AudioSource>();
+        src = GetComponent<AudioSource>();
         ammo = stats.maxAmmo.iValue;
         timer = new Timer(1f / stats.fireRate.Value + 0.001f);
         reloadTimer = new Timer(2);
         reloadTimer.Pause();
+        line = GetComponent<LineRenderer>();
+        lineTimer = new Timer(1);
+        lineTimer.timerComplete.AddListener(ResetLine);
     }
 
     private void Update()
@@ -46,6 +51,11 @@ public class GunScript : MonoBehaviour
         Debug.Log(stats.fireRate.Value);
 
         #endregion
+
+        if(line.enabled)
+        {
+            lineTimer.Tick(Time.deltaTime);
+        }
 
 
         timer.Tick(Time.deltaTime);
@@ -61,7 +71,9 @@ public class GunScript : MonoBehaviour
             timer.SetMaxTime(1f / stats.fireRate.Value + 0.001f);
             GunFired.Invoke(this);
 
-            //src.Play();
+
+            src.pitch = Random.Range(0.95f, 1.05f);
+            src.Play();
 
             //Create ray to point towards
             RaycastHit hit;
@@ -71,8 +83,14 @@ public class GunScript : MonoBehaviour
                 Random.Range(-stats.spread.Value, stats.spread.Value),
                 Random.Range(-stats.spread.Value, stats.spread.Value));
 
+
+            lineTimer.Reset();
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
             {
+                line.enabled = true;
+                line.SetPosition(0, transform.position);
+                line.SetPosition(1, hit.point);
+
                 GameObject hitEntity = hit.collider.gameObject;
                 transform.LookAt(hit.point);
                 if (hitEntity.tag == "Wall") //If it hit a wall/floor
@@ -99,6 +117,10 @@ public class GunScript : MonoBehaviour
             }
             else //If it doesn't hit anything
             {
+                line.enabled = true;
+                line.SetPosition(0, transform.position);
+                line.SetPosition(1, transform.position + ray.direction * 50);
+
                 transform.forward = ray.direction;
             }
 
@@ -127,6 +149,13 @@ public class GunScript : MonoBehaviour
             reloadTimer.Reset();
             reloadTimer.Pause();
         }
+    }
+
+    void ResetLine()
+    {
+        line.enabled = false;
+
+        lineTimer.Reset();
     }
 
     private void OnEnable()

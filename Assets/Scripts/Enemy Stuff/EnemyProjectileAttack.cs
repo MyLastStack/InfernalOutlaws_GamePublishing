@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class EnemyProjectileAttack : MonoBehaviour
 {
-    private float damageDeal = 5f;
-
     Rigidbody rb;
     void Start()
     {
@@ -22,11 +20,6 @@ public class EnemyProjectileAttack : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         PlayerController pc = collision.gameObject.GetComponent<PlayerController>();
-
-        if (pc != null)
-        {
-            pc.ps.health -= damageDeal;
-        }
 
         Destroy(gameObject);
     }

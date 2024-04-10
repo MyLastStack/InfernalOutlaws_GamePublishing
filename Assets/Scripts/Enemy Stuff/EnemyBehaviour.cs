@@ -21,6 +21,10 @@ public class EnemyBehaviour : MonoBehaviour
     public float damage;
     public EnemyAttack attack;
 
+    Timer navMeshTimer; //How often the navmesh recalculates its destination
+
+    bool isStunned = false;
+
     private void Start()
     {
         attack.damage = damage;
@@ -32,24 +36,28 @@ public class EnemyBehaviour : MonoBehaviour
         attackTimer.timerComplete.AddListener(StartAttack);
         attackDurationTimer = new Timer(attackDuration);
         attackDurationTimer.timerComplete.AddListener(EndAttack);
+        navMeshTimer = new Timer(0.2f);
+        navMeshTimer.timerComplete.AddListener(UpdateAgent);
     }
 
     private void Update()
     {
-        //Follow player
-        agent.SetDestination(player.transform.position);
+        if (!isStunned)
+        {
+            navMeshTimer.Tick(Time.deltaTime);
 
-        //If player is in range, try to attack
-        if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
-        {
-            attackTimer.Tick(Time.deltaTime);
-            //Rotate to look at the player
-            Quaternion rotation = Quaternion.LookRotation(player.gameObject.transform.position - transform.position);
-            transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
-        }
-        else //Otherwise reset attack timer back to its max
-        {
-            attackTimer.Reset();
+            //If player is in range, try to attack
+            if (Vector2.Distance(transform.position, player.transform.position) < attackRange)
+            {
+                attackTimer.Tick(Time.deltaTime);
+                //Rotate to look at the player
+                Quaternion rotation = Quaternion.LookRotation(player.gameObject.transform.position - transform.position);
+                transform.rotation = Quaternion.Euler(0f, rotation.eulerAngles.y, 0f);
+            }
+            else //Otherwise reset attack timer back to its max
+            {
+                attackTimer.Reset();
+            }
         }
 
         //If attacking, count down attack time left
@@ -57,6 +65,16 @@ public class EnemyBehaviour : MonoBehaviour
         {
             attackDurationTimer.Tick(Time.deltaTime);
         }
+    }
+
+    void UpdateAgent()
+    {
+        navMeshTimer.Reset();
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(player.transform.position, out navHit, 50f, NavMesh.GetAreaFromName("Humanoid"));
+
+        //Follow player
+        agent.SetDestination(navHit.position);
     }
 
     private void StartAttack()
