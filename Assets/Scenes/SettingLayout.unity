@@ -18774,6 +18774,12 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3cc3358c26c57034e91d7f932fc104e5, type: 3}
   - {fileID: 8300000, guid: f4dba4a4f08d07248a2de794cf80fd4e, type: 3}
   - {fileID: 8300000, guid: 59cc9d1991254a64a811b4933c5d4b5b, type: 3}
+  - {fileID: 8300000, guid: 9a4dbf6ee4acd774d92a13c8c2951f74, type: 3}
+  - {fileID: 8300000, guid: 9eeefca43c85db94f9df910347318937, type: 3}
+  - {fileID: 8300000, guid: 7ecc22fdfb476524696b07529bddacb9, type: 3}
+  - {fileID: 8300000, guid: 4b74e43e9ca39b94db201d1a4eeade97, type: 3}
+  - {fileID: 8300000, guid: 279dec708debcf543983b788cc2229ba, type: 3}
+  - {fileID: 8300000, guid: 6ade4f53dd060094589cd99ade3bc0af, type: 3}
   fadeDuration: 2
   startVolume: 0.35
 --- !u!1001 &1621559710
