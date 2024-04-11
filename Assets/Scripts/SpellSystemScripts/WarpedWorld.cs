@@ -8,7 +8,7 @@ public class WarpedWorld : MonoBehaviour
     public float targetScale;
     public float duration;
     public float stayDuration;
-    public float speedMultiplier = 0.5f; // Adjust for balance!
+    public float speedMultiplier; // Adjust for balance!
 
     private Vector3 initialScale;
     private float startTime;
