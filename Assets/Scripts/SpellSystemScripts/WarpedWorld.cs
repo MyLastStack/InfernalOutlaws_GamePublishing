@@ -8,11 +8,10 @@ public class WarpedWorld : MonoBehaviour
     public float targetScale;
     public float duration;
     public float stayDuration;
-    public float speedMultiplier = 0.5f; // Adjust for balance!
+    public float speedMultiplier; // Adjust for balance!
 
     private Vector3 initialScale;
     private float startTime;
-    private bool effectApplied = false; // Flag to track if the effect has been applied
     private List<NavMeshAgent> affectedAgents = new List<NavMeshAgent>();
 
     void Start()
@@ -36,15 +35,14 @@ public class WarpedWorld : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (effectApplied)
-            return;
-
         NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
         if (agent != null)
         {
-            agent.speed *= speedMultiplier;
-            affectedAgents.Add(agent);
-            effectApplied = true;
+            if (!affectedAgents.Contains(agent))
+            {
+                affectedAgents.Add(agent);
+                agent.speed *= speedMultiplier;
+            }
         }
     }
 
@@ -53,28 +51,17 @@ public class WarpedWorld : MonoBehaviour
         NavMeshAgent agent = other.GetComponent<NavMeshAgent>();
         if (agent != null && affectedAgents.Contains(agent))
         {
-            agent.speed /= speedMultiplier;
             affectedAgents.Remove(agent);
-
-            if (affectedAgents.Count == 0)
-            {
-                effectApplied = false;
-            }
+            agent.speed /= speedMultiplier;
         }
     }
 
     private void OnDestroy()
     {
-        RestoreAgentSpeeds();
-    }
-
-    private void RestoreAgentSpeeds()
-    {
+        // Restore original speeds of all affected agents before destruction
         foreach (NavMeshAgent agent in affectedAgents)
         {
             agent.speed /= speedMultiplier;
         }
-
-        affectedAgents.Clear();
     }
 }
