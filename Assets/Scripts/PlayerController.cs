@@ -164,7 +164,6 @@ public class PlayerController : MonoBehaviour
             dashCooldownTimer.Tick(Time.deltaTime);
         }
 
-        Debug.Log(shieldCooldownTimer.IsDone());
         //Check if shield should regenerate
         if (!shieldCooldownTimer.IsDone())
         {

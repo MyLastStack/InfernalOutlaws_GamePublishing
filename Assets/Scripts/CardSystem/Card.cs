@@ -516,14 +516,14 @@ public class SheriffOfLassos : Card
     public void CallCard(GameObject enemy)
     {
         float chance = 0;
-        for(int i = 0; i < stacks; i++)
+        for (int i = 0; i < stacks; i++)
         {
             chance += (MAX_VAL - chance + 0.001f) / 10;
             chance = Mathf.Min(chance, MAX_VAL);
         }
 
         float value = Random.Range(0f, 1f);
-        if(value < chance)
+        if (value < chance)
         {
             List<HealthScript> nearbyDamageables = Physics.OverlapSphere(enemy.transform.position, 5)
             .Where(x => x.gameObject.GetComponent<HealthScript>() != null)
@@ -544,6 +544,117 @@ public class SheriffOfLassos : Card
         EnemyDeath.AddListener(CallCard);
         playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         prefab = (GameObject)Resources.Load("Prefabs/Explosion Fire", typeof(GameObject));
+    }
+}
+public class DeputyOfLassos : Card
+{
+    public override string cardName => "Deputy of Lassos";
+
+    List<EnemyDamageHolder> enemies = new List<EnemyDamageHolder>();
+    List<float> damageLeftList = new List<float>();
+    Timer timer;
+
+    GunScript gun;
+
+    public void CallCard(GameObject enemy, float damage)
+    {
+        gun.damageDealt = 0; //Disable the damage dealt first
+
+        if (enemies.Where(x => x.enemy == enemy).Count() == 0)
+        {
+            enemies.Add(new EnemyDamageHolder(enemy, damage * (1 + (0.75f * stacks))));
+        }
+        else
+        {
+            EnemyDamageHolder hitEnemy = enemies.Where(x => x.enemy == enemy).FirstOrDefault();
+            hitEnemy.damageLeft += (damage * (1 + 0.75f * stacks));
+
+            enemies[enemies.IndexOf(enemies.Where(x => x.enemy == enemy).FirstOrDefault())] = hitEnemy;
+        }
+    }
+
+    public override void Update()
+    {
+        enemies.RemoveAll(x => x.enemy == null);
+        timer.Tick(Time.deltaTime);
+    }
+
+    public void ApplyDamage()
+    {
+        Debug.Log("Attempting to apply damage");
+        timer.Reset();
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            EnemyDamageHolder enemyHolder = enemies[i];
+            float damageDealt = 5 / (2.5f + (stacks * 0.5f));
+            enemyHolder.damageLeft -= damageDealt;
+            if(enemyHolder.damageLeft < 0)
+            {
+                damageDealt -= Mathf.Abs(enemyHolder.damageLeft);
+                enemyHolder.damageLeft = 0;
+            }
+
+            enemies[i] = enemyHolder;
+
+            enemies[i].enemy.GetComponent<HealthScript>().health -= damageDealt;
+        }
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitEnemy.AddListener(CallCard);
+        timer = new Timer(0.25f);
+        timer.timerComplete.AddListener(ApplyDamage);
+        gun = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().gun;
+    }
+
+    private struct EnemyDamageHolder
+    {
+        public GameObject enemy;
+        public float damageLeft;
+
+        public EnemyDamageHolder(GameObject enemy, float damageLeft)
+        {
+            this.enemy = enemy;
+            this.damageLeft = damageLeft;
+        }
+    }
+}
+public class DeputyOfBoots : Card
+{
+    public override string cardName => "Deputy of Boots";
+    Timer timer;
+    Timer abilityCooldown;
+
+    public void CallCard(GameObject player, float damage)
+    {
+        timer.Reset();
+        timer.Pause();
+        abilityCooldown.Reset();
+    }
+
+    public override void SubscribeEvent()
+    {
+        GenericHitPlayer.AddListener(CallCard);
+        GenericHitEnemy.AddListener(CallCard);
+        timer = new Timer(1f);
+        timer.Pause();
+        abilityCooldown = new Timer(10f);
+    }
+
+    public override void Update()
+    {
+        abilityCooldown.Tick(Time.deltaTime);
+        if(abilityCooldown.IsDone())
+        {
+            timer.Unpause();
+        }
+        timer.Tick(Time.deltaTime);
+        if(timer.IsDone())
+        {
+            timer.Reset();
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ps.health += (1 * stacks);
+        }
     }
 }
 
@@ -574,5 +685,7 @@ public enum Cards //After making a card, make sure to add its name to this list
     JesterOfBullets,
     TenOfBadges,
     NineOfBadges,
-    SheriffOfLassos
+    SheriffOfLassos,
+    DeputyOfLassos,
+    DeputyOfBoots
 }

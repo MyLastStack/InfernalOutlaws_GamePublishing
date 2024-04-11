@@ -48,7 +48,7 @@ public class GunScript : MonoBehaviour
     {
         #region Place stat tracking debugs here
 
-        Debug.Log(stats.fireRate.Value);
+
 
         #endregion
 
