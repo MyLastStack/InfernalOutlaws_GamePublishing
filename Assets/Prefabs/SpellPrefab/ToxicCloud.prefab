@@ -149,5 +149,5 @@ MonoBehaviour:
   targetScale: 10
   duration: 0.2
   stayDuration: 8
-  damageInterval: 0.5
+  damageInterval: 0.2
   damagePerInterval: 2.5

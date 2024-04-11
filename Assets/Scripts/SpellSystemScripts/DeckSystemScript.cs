@@ -1,6 +1,8 @@
+using MagicPigGames;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,7 +37,8 @@ public class DeckSystemScript : MonoBehaviour
     [SerializeField] public Sprite revitilizeSprite;
     [SerializeField] public Sprite warpedWorldSprite;
 
-    int spellCooldownDuration = 2;
+    float currentCDTimer = 2;
+    float spellCooldownDuration = 2;
     private bool isCooldown = false;
 
     [Header("Object References")]
@@ -45,6 +48,10 @@ public class DeckSystemScript : MonoBehaviour
     public Image csOne;
     public Image csTwo;
     public Image csThree;
+    public TMP_Text csText;
+    public TMP_Text csText2;
+    public TMP_Text csText3;
+    public VerticalProgressBar bar;
 
     FireballSpell fireballSpell;
     LightningStrikeSpell lightningStrikeSpell;
@@ -58,16 +65,28 @@ public class DeckSystemScript : MonoBehaviour
     {
         // Spell Template
         protected Sprite spellSprite;
+        protected string spellName;
+        protected Color spellNameColor;
 
-        public Spell(Sprite sprite)
+        public Spell(Sprite sprite, string name, Color color)
         {
             spellSprite = sprite;
+            spellName = name;
+            spellNameColor = color;
         }
 
         public virtual void Cast(GameObject spawnPoint) { }
         public virtual Sprite SpellSprite
         {
             get { return spellSprite; }
+        }
+        public virtual string SpellName
+        {
+            get { return spellName; }
+        }
+        public virtual Color SpellNameColor 
+        { 
+            get { return spellNameColor; } 
         }
     }
     #endregion
@@ -77,7 +96,7 @@ public class DeckSystemScript : MonoBehaviour
     {
         public GameObject fireballPrefab;
 
-        public FireballSpell(Sprite sprite) : base(sprite)
+        public FireballSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
         {
         }
 
@@ -94,8 +113,8 @@ public class DeckSystemScript : MonoBehaviour
         public Camera lsCam;
         public GameObject lightningStrikePrefab;
 
-        public LightningStrikeSpell(Sprite sprite) : base(sprite)
-        { 
+        public LightningStrikeSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
+        {
         }
 
         public override void Cast(GameObject spawnPoint)
@@ -114,7 +133,7 @@ public class DeckSystemScript : MonoBehaviour
         public Camera tcCam;
         public GameObject toxicCloudPrefab;
 
-        public ToxicCloudSpell(Sprite sprite) : base(sprite)
+        public ToxicCloudSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
         {
         }
 
@@ -133,7 +152,7 @@ public class DeckSystemScript : MonoBehaviour
     {
         PlayerController playerHP;
 
-        public RevitilizeSpell(Sprite sprite) : base(sprite)
+        public RevitilizeSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
         {
         }
 
@@ -150,7 +169,7 @@ public class DeckSystemScript : MonoBehaviour
         public Camera wwCam;
         public GameObject warpedWorldPrefab;
 
-        public WarpedWorldSpell(Sprite sprite) : base(sprite)
+        public WarpedWorldSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
         {
         }
 
@@ -194,6 +213,16 @@ public class DeckSystemScript : MonoBehaviour
             }
         }
 
+        if (currentCDTimer < spellCooldownDuration)
+        {
+            currentCDTimer += Time.deltaTime;
+        }
+        if (currentCDTimer > spellCooldownDuration)
+        {
+            currentCDTimer = spellCooldownDuration;
+        }
+        bar.SetProgress(currentCDTimer / spellCooldownDuration);
+
         // Visuals
         for (int i = 0; i < 3; i++)
         {
@@ -204,14 +233,20 @@ public class DeckSystemScript : MonoBehaviour
                     case 0:
                         cardSlotOne.SetActive(true);
                         csOne.sprite = shuffledSpells[i].SpellSprite;
+                        csText.text = shuffledSpells[i].SpellName;
+                        csText.color = shuffledSpells[i].SpellNameColor;
                         break;
                     case 1:
                         cardSlotTwo.SetActive(true);
                         csTwo.sprite = shuffledSpells[i].SpellSprite;
+                        csText2.text = shuffledSpells[i].SpellName;
+                        csText2.color = shuffledSpells[i].SpellNameColor;
                         break;
                     case 2:
                         cardSlotThree.SetActive(true);
                         csThree.sprite = shuffledSpells[i].SpellSprite;
+                        csText3.text = shuffledSpells[i].SpellName;
+                        csText3.color = shuffledSpells[i].SpellNameColor;
                         break;
                 }
             }
@@ -235,20 +270,20 @@ public class DeckSystemScript : MonoBehaviour
 
     private void SpellSetup()
     {
-        fireballSpell = new FireballSpell(fireBallSprite);
+        fireballSpell = new FireballSpell(fireBallSprite, "Fireball", new Color(1f, 0.196f, 0f, 1f));
         fireballSpell.fireballPrefab = fireBallPrefab;
 
-        lightningStrikeSpell = new LightningStrikeSpell(lightningStrikeSprite);
+        lightningStrikeSpell = new LightningStrikeSpell(lightningStrikeSprite, "Lightning", new Color(0f, 0.973f, 1f, 1f));
         lightningStrikeSpell.lsCam = cam;
         lightningStrikeSpell.lightningStrikePrefab = lightningStrikePrefab;
 
-        toxicCloudSpell = new ToxicCloudSpell(toxicCloudSprite);
+        toxicCloudSpell = new ToxicCloudSpell(toxicCloudSprite, "Toxic Cloud", Color.green);
         toxicCloudSpell.tcCam = cam;
         toxicCloudSpell.toxicCloudPrefab = toxicCloudPrefab;
 
-        revitilizeSpell = new RevitilizeSpell(revitilizeSprite);
+        revitilizeSpell = new RevitilizeSpell(revitilizeSprite, "Revitilize", new Color(1f, 0.796f, 0f, 1f));
 
-        warpedWorldSpell = new WarpedWorldSpell(warpedWorldSprite);
+        warpedWorldSpell = new WarpedWorldSpell(warpedWorldSprite, "Warped World", Color.white);
         warpedWorldSpell.wwCam = cam;
         warpedWorldSpell.warpedWorldPrefab = warpedWorldPrefab;
     }
@@ -312,6 +347,7 @@ public class DeckSystemScript : MonoBehaviour
     private IEnumerator SpellCooldown()
     {
         isCooldown = true;
+        currentCDTimer = 0;
         yield return new WaitForSeconds(spellCooldownDuration);
         isCooldown = false;
     }

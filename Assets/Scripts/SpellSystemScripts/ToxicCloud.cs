@@ -7,8 +7,8 @@ public class ToxicCloud : MonoBehaviour
     public float targetScale;
     public float duration;
     public float stayDuration;
-    public float damageInterval = 0.5f;
-    public float damagePerInterval = 2.5f;
+    public float damageInterval;
+    public float damagePerInterval;
 
     private Vector3 initialScale;
     private float startTime;

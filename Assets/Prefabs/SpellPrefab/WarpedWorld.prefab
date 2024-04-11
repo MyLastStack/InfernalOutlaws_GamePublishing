@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e43bcc391b07ea644b129fe13b7caf0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScale: 10
+  targetScale: 20
   duration: 0.2
-  stayDuration: 10
-  speedMultiplier: 0.5
+  stayDuration: 15
+  speedMultiplier: 0.15
