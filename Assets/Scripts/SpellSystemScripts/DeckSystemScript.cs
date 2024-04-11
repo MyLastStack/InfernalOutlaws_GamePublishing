@@ -160,7 +160,14 @@ public class DeckSystemScript : MonoBehaviour
         {
             playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-            playerHP.ps.health += 10f;
+            if ((playerHP.ps.maxHealth - playerHP.ps.health) < 10)
+            {
+                playerHP.ps.health += (playerHP.ps.maxHealth - playerHP.ps.health);
+            }
+            else
+            {
+                playerHP.ps.health += 10f;
+            }
         }
     }
 
