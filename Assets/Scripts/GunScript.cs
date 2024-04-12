@@ -52,7 +52,7 @@ public class GunScript : MonoBehaviour
 
         #endregion
 
-        if(line.enabled)
+        if (line.enabled)
         {
             lineTimer.Tick(Time.deltaTime);
         }
@@ -112,6 +112,7 @@ public class GunScript : MonoBehaviour
                         BulletHitEnemy.Invoke(this, hitEntity, damageDealt);
                     }
 
+                    StartCoroutine(ApplyRedFlash(hit.collider.gameObject));
                     healthScript.health -= damageDealt;
                 }
             }
@@ -138,17 +139,32 @@ public class GunScript : MonoBehaviour
 
         reloadTimer.Tick(Time.deltaTime);
 
-        if(reloadAction.WasPressedThisFrame() && ammo <= 0)
+        if (reloadAction.WasPressedThisFrame() && ammo <= 0)
         {
             reloadTimer.Unpause();
         }
 
-        if(reloadTimer.IsDone())
+        if (reloadTimer.IsDone())
         {
             ammo = stats.maxAmmo.iValue;
             reloadTimer.Reset();
             reloadTimer.Pause();
         }
+    }
+
+    IEnumerator ApplyRedFlash(GameObject obj)
+    {
+        if (obj != null)
+        {
+            obj.transform.GetChild(0).GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red);
+        }
+        yield return new WaitForSeconds(0.1f);
+
+        if (obj != null)
+        {
+            obj.transform.GetChild(0).GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.black);
+        }
+
     }
 
     void ResetLine()

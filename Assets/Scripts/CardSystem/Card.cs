@@ -581,7 +581,6 @@ public class DeputyOfLassos : Card
 
     public void ApplyDamage()
     {
-        Debug.Log("Attempting to apply damage");
         timer.Reset();
         for (int i = 0; i < enemies.Count; i++)
         {
