@@ -33,10 +33,10 @@ public class MusicPlayer : MonoBehaviour
 
     private void Update()
     {
-        textDurationTimer.Tick(Time.deltaTime);
+        textDurationTimer.Tick(Time.unscaledDeltaTime);
         if (!textDurationTimer.IsDone())
         {
-            text.alpha = Mathf.Clamp01(text.alpha + Time.deltaTime * fadeSpeed);
+            text.alpha = Mathf.Clamp01(text.alpha + Time.unscaledDeltaTime * fadeSpeed);
             if (text.alpha >= 1)
             {
                 textDurationTimer.Unpause();
@@ -44,7 +44,7 @@ public class MusicPlayer : MonoBehaviour
         }
         else if (textDurationTimer.IsDone())
         {
-            text.alpha = Mathf.Clamp01(text.alpha - Time.deltaTime * fadeSpeed);
+            text.alpha = Mathf.Clamp01(text.alpha - Time.unscaledDeltaTime * fadeSpeed);
         }
 
         if (src.isPlaying && src.time >= src.clip.length - fadeDuration)
