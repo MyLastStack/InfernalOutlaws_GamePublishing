@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Seven of Lassos
   m_EditorClassIdentifier: 
   cardName: Seven of Lassos
-  description: Increase your max health by 10
+  description: Increase your max health by 25
   sprite: {fileID: 21300000, guid: 66355d3c25ac2e64a97d6394cf22301a, type: 3}
   cardType: 0
   cardScript: 11
