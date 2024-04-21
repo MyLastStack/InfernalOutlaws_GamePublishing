@@ -9,7 +9,7 @@ public class CardPickup : MonoBehaviour
 {
     public GameObject manager;
     public CardStats[] cardPool;
-    CardStats card;
+    [HideInInspector] public CardStats card;
 
     [SerializeField] TextMeshProUGUI titleText;
     [SerializeField] TextMeshProUGUI descriptionText;
@@ -23,6 +23,11 @@ public class CardPickup : MonoBehaviour
         MouseLocker.Unlock();
         card = cardPool[Random.Range(0, cardPool.Length)];
 
+        UpdateText();
+    }
+
+    public void UpdateText()
+    {
         titleText.text = card.name;
         descriptionText.text = card.description;
         image.sprite = card.sprite;

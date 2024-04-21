@@ -79,7 +79,7 @@ public class TwoOfBullets : Card
 
     public override void CallCard(PlayerController player)
     {
-        StatModifier modifier = new StatModifier(0.2f * stacks, ModifierType.PercentAdd, cardName);
+        StatModifier modifier = new StatModifier(0.3f * stacks, ModifierType.PercentAdd, cardName);
         player.gun.stats.fireRate.AddModifier(modifier);
     }
 }
@@ -323,7 +323,7 @@ public class SheriffOfBullets : Card
     public void CallCard(GameObject enemy)
     {
         killCount++;
-        StatModifier mod = new StatModifier(killCount * 0.01f * stacks, ModifierType.PercentMult, cardName);
+        StatModifier mod = new StatModifier(killCount * 0.025f * stacks, ModifierType.PercentMult, cardName);
         player.gun.stats.fireRate.AddModifier(mod);
     }
 
@@ -518,7 +518,7 @@ public class SheriffOfLassos : Card
         float chance = 0;
         for (int i = 0; i < stacks; i++)
         {
-            chance += (MAX_VAL - chance + 0.001f) / 10;
+            chance += (MAX_VAL - chance + 0.001f) / 4;
             chance = Mathf.Min(chance, MAX_VAL);
         }
 
