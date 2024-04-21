@@ -44,5 +44,10 @@ public class CardPickupManager : MonoBehaviour
                 card.UpdateText();
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
