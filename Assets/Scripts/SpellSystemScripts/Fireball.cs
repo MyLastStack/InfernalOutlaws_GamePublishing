@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fireball : MonoBehaviour
 {
-    private float damageDeal = 15f;
+    public float damageDeal = 15f;
 
     private PlayerController playerScript;
 

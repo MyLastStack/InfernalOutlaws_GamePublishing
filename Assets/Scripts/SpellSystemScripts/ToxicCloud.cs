@@ -45,6 +45,8 @@ public class ToxicCloud : MonoBehaviour
         {
             yield return new WaitForSeconds(damageInterval);
 
+            affectedEnemies.RemoveAll(x => x == null);
+            
             foreach (HealthScript enemy in affectedEnemies)
             {
                 if (enemy != null)

@@ -15,5 +15,5 @@ MonoBehaviour:
   cardName: Nine of Lassos
   description: Increase your max health by 1 for every 3 enemies you kill
   sprite: {fileID: 21300000, guid: 44caf4d1edba1c04d94994bb026e156a, type: 3}
-  cardType: 0
-  cardScript: 0
+  cardType: 1
+  cardScript: 15

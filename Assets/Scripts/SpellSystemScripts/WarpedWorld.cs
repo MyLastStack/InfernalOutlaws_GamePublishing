@@ -58,6 +58,7 @@ public class WarpedWorld : MonoBehaviour
 
     private void OnDestroy()
     {
+        affectedAgents.RemoveAll(x => x == null);
         // Restore original speeds of all affected agents before destruction
         foreach (NavMeshAgent agent in affectedAgents)
         {

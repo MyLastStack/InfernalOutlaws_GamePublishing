@@ -46,7 +46,6 @@ public class HitScanGun : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, gunRange))
         {
-            Debug.Log(hit.transform.name);
         }
 
         playerStats.currentAmmoCount--;

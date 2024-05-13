@@ -79,7 +79,7 @@ public class TwoOfBullets : Card
 
     public override void CallCard(PlayerController player)
     {
-        StatModifier modifier = new StatModifier(0.15f + (0.1f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        StatModifier modifier = new StatModifier(0.2f * stacks, ModifierType.PercentAdd, cardName);
         player.gun.stats.fireRate.AddModifier(modifier);
     }
 }
@@ -99,7 +99,7 @@ public class FourOfBullets : Card
 
     public override void CallCard(PlayerController player)
     {
-        StatModifier modifier = new StatModifier(1f + (1f * (stacks - 1)), ModifierType.Flat, cardName);
+        StatModifier modifier = new StatModifier(1f + stacks, ModifierType.Flat, cardName);
         player.gun.stats.damage.AddModifier(modifier);
     }
 }
@@ -109,7 +109,7 @@ public class AceOfBoots : Card
 
     public override void CallCard(PlayerController player)
     {
-        StatModifier modifier = new StatModifier(0.15f + (0.08f * (stacks - 1)), ModifierType.PercentAdd, cardName);
+        StatModifier modifier = new StatModifier(0.15f + (0.1f * (stacks - 1)), ModifierType.PercentAdd, cardName);
         player.ps.jumpPowerStat.AddModifier(modifier);
     }
 }
@@ -148,15 +148,15 @@ public class EightOfBadges : Card
         player.ps.shieldCooldownStat.AddModifier(modifier);
     }
 }
-public class SevenOfLassos : Card
+public class SevenOfLassos: Card
 {
     public override string cardName => "Seven of Lassos";
 
     public override void CallCard(PlayerController player)
     {
-        StatModifier modifier = new StatModifier(10 * stacks, ModifierType.Flat, cardName);
+        StatModifier modifier = new StatModifier(25 * stacks, ModifierType.Flat, cardName);
         player.ps.maxHealthStat.AddModifier(modifier);
-        player.ps.health += 10;
+        player.ps.health += 25;
     }
 }
 public class SixOfBadges : Card
@@ -581,7 +581,6 @@ public class DeputyOfLassos : Card
 
     public void ApplyDamage()
     {
-        Debug.Log("Attempting to apply damage");
         timer.Reset();
         for (int i = 0; i < enemies.Count; i++)
         {

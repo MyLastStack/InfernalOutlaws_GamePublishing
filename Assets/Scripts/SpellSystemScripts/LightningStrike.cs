@@ -11,7 +11,7 @@ public class LightningStrike : MonoBehaviour
 
     private Vector3 initialScale;
     private float startTime;
-    private float damageDeal = 10f;
+    public float damageDeal = 10f;
 
     private bool canDamage = true;
     private float damageCooldown = 0.1f;
