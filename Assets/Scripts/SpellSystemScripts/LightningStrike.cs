@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightningStrike : MonoBehaviour
+public class LightningStrike : Spell
 {
     public float targetScale = 2f;
     public float duration = 0.2f;
@@ -11,17 +11,13 @@ public class LightningStrike : MonoBehaviour
 
     private Vector3 initialScale;
     private float startTime;
-    public float damageDeal = 10f;
+    public float damage = 10f;
 
     private bool canDamage = true;
     private float damageCooldown = 0.1f;
 
-    private PlayerController playerScript;
-
     void Start()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
         initialScale = transform.localScale;
         startTime = Time.time;
     }
@@ -30,7 +26,7 @@ public class LightningStrike : MonoBehaviour
     {
         float progress = (Time.time - startTime) / duration;
         progress = Mathf.Clamp01(progress);
-        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale), progress);
+        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale) * uStats.SpellSize.Value, progress);
         transform.localScale = newScale;
 
         if (progress >= 1f)
@@ -50,7 +46,7 @@ public class LightningStrike : MonoBehaviour
                 HealthScript enemyHealth = collider.GetComponent<HealthScript>();
                 if (enemyHealth != null)
                 {
-                    enemyHealth.health -= damageDeal * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+                    enemyHealth.health -= damage * uStats.SpellDamage.Value;
                 }
             }
 

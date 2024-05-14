@@ -2,25 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToxicCloud : MonoBehaviour
+public class ToxicCloud : Spell
 {
     public float targetScale;
+    public float growTime;
     public float duration;
-    public float stayDuration;
     public float damageInterval;
-    public float damagePerInterval;
+    public float damage;
 
     private Vector3 initialScale;
     private float startTime;
 
     private List<HealthScript> affectedEnemies = new List<HealthScript>();
-    private Coroutine damageCoroutine;
-    private PlayerController playerScript;
 
     void Start()
     {
-        playerScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
         initialScale = transform.localScale;
         startTime = Time.time;
         StartCoroutine(ApplyDamageRoutine());
@@ -28,14 +24,14 @@ public class ToxicCloud : MonoBehaviour
 
     void Update()
     {
-        float progress = (Time.time - startTime) / duration;
+        float progress = (Time.time - startTime) / growTime;
         progress = Mathf.Clamp01(progress);
-        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale), progress);
+        Vector3 newScale = Vector3.Lerp(initialScale, new Vector3(targetScale, targetScale, targetScale) * uStats.SpellSize.Value, progress);
         transform.localScale = newScale;
 
         if (progress >= 1f)
         {
-            Destroy(gameObject, stayDuration);
+            Destroy(gameObject, duration * uStats.Duration.Value);
         }
     }
 
@@ -43,7 +39,7 @@ public class ToxicCloud : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(damageInterval);
+            yield return new WaitForSeconds(damageInterval / uStats.TickRate.Value);
 
             affectedEnemies.RemoveAll(x => x == null);
             
@@ -51,7 +47,7 @@ public class ToxicCloud : MonoBehaviour
             {
                 if (enemy != null)
                 {
-                    enemy.health -= damagePerInterval * (playerScript.gun.stats.damage.Value / playerScript.gun.stats.damage.BaseValue);
+                    enemy.health -= damage * uStats.SpellDamage.Value;
                 }
             }
         }

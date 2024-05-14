@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2162742164849765949}
@@ -106,7 +106,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &4940216735577532531
 Rigidbody:
@@ -147,11 +147,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dfc2686e23734749b821f78b37584a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetScale: 10
-  duration: 0.2
-  stayDuration: 8
+  uStats: {fileID: 0}
+  playerScript: {fileID: 0}
+  targetScale: 1
+  growTime: 1
+  duration: 5
   damageInterval: 0.2
-  damagePerInterval: 2.5
+  damage: 2.5
 --- !u!1001 &2218691707987385335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,7 +216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
       propertyPath: scalingMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 56852242586695117, guid: 4d7e19c9fcb52be4bb9a8ba855ffe12d, type: 3}
       propertyPath: InitialModule.startSize.scalar

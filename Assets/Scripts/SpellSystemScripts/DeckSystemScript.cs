@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
-public class DeckSystemScript : MonoBehaviour
+public class DeckSystemScript : Spell
 {
     [Header("Keybind Inputs")]
     public InputAction input1;
@@ -17,8 +17,8 @@ public class DeckSystemScript : MonoBehaviour
     public InputAction input3;
 
     [Header("Spell Deck")]
-    public List<Spell> totalSpells = new List<Spell>();
-    public List<Spell> shuffledSpells = new List<Spell>();
+    public List<SpellCast> totalSpells = new List<SpellCast>();
+    public List<SpellCast> shuffledSpells = new List<SpellCast>();
 
     [Header("Object References")]
     [SerializeField] public Camera cam;
@@ -38,7 +38,6 @@ public class DeckSystemScript : MonoBehaviour
     [SerializeField] public Sprite warpedWorldSprite;
 
     float currentCDTimer = 2;
-    float spellCooldownDuration = 2;
     private bool isCooldown = false;
 
     [Header("Object References")]
@@ -61,15 +60,18 @@ public class DeckSystemScript : MonoBehaviour
 
     #region Base Spell Class
     [Serializable]
-    public class Spell
+    public class SpellCast
     {
         // Spell Template
         protected Sprite spellSprite;
         protected string spellName;
         protected Color spellNameColor;
 
-        public Spell(Sprite sprite, string name, Color color)
+        public UniversalSpellStats uStats;
+
+        public SpellCast(Sprite sprite, string name, Color color)
         {
+            uStats = GameObject.FindGameObjectWithTag("GameManager").GetComponent<UniversalSpellStats>();
             spellSprite = sprite;
             spellName = name;
             spellNameColor = color;
@@ -92,7 +94,7 @@ public class DeckSystemScript : MonoBehaviour
     #endregion
 
     #region Unique Spell Classes
-    public class FireballSpell : Spell
+    public class FireballSpell : SpellCast
     {
         public GameObject fireballPrefab;
 
@@ -108,7 +110,7 @@ public class DeckSystemScript : MonoBehaviour
         }
     }
 
-    public class LightningStrikeSpell : Spell
+    public class LightningStrikeSpell : SpellCast
     {
         public Camera lsCam;
         public GameObject lightningStrikePrefab;
@@ -128,7 +130,7 @@ public class DeckSystemScript : MonoBehaviour
         }
     }
 
-    public class ToxicCloudSpell : Spell
+    public class ToxicCloudSpell : SpellCast
     {
         public Camera tcCam;
         public GameObject toxicCloudPrefab;
@@ -148,9 +150,9 @@ public class DeckSystemScript : MonoBehaviour
         }
     }
 
-    public class RevitilizeSpell : Spell
+    public class RevitilizeSpell : SpellCast
     {
-        PlayerController playerHP;
+        PlayerController player;
 
         public RevitilizeSpell(Sprite sprite, string name, Color color) : base(sprite, name, color)
         {
@@ -158,20 +160,21 @@ public class DeckSystemScript : MonoBehaviour
 
         public override void Cast(GameObject spawnPoint)
         {
-            playerHP = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-            if ((playerHP.ps.maxHealth - playerHP.ps.health) < 10)
+            player.ps.health = Mathf.Min(player.ps.health + (10 * uStats.SpellPotency.Value), player.ps.maxHealth);
+            /*if ((player.ps.maxHealth - player.ps.health) < 10)
             {
-                playerHP.ps.health += (playerHP.ps.maxHealth - playerHP.ps.health);
+                player.ps.health += (player.ps.maxHealth - player.ps.health);
             }
             else
             {
-                playerHP.ps.health += 10f;
-            }
+                player.ps.health += 10f;
+            }*/
         }
     }
 
-    public class WarpedWorldSpell: Spell
+    public class WarpedWorldSpell: SpellCast
     {
         public Camera wwCam;
         public GameObject warpedWorldPrefab;
@@ -220,15 +223,15 @@ public class DeckSystemScript : MonoBehaviour
             }
         }
 
-        if (currentCDTimer < spellCooldownDuration)
+        if (currentCDTimer < uStats.SpellCooldown.Value)
         {
             currentCDTimer += Time.deltaTime;
         }
-        if (currentCDTimer > spellCooldownDuration)
+        if (currentCDTimer > uStats.SpellCooldown.Value)
         {
-            currentCDTimer = spellCooldownDuration;
+            currentCDTimer = uStats.SpellCooldown.Value;
         }
-        bar.SetProgress(currentCDTimer / spellCooldownDuration);
+        bar.SetProgress(currentCDTimer / uStats.SpellCooldown.Value);
 
         // Visuals
         for (int i = 0; i < 3; i++)
@@ -295,7 +298,7 @@ public class DeckSystemScript : MonoBehaviour
         warpedWorldSpell.warpedWorldPrefab = warpedWorldPrefab;
     }
 
-    public void ShuffleDeck(List<Spell> shuffling)
+    public void ShuffleDeck(List<SpellCast> shuffling)
     {
         shuffledSpells.Clear();
         shuffledSpells.AddRange(totalSpells);
@@ -306,7 +309,7 @@ public class DeckSystemScript : MonoBehaviour
         {
             n--;
             int k = rng.Next(n + 1);
-            Spell temp = shuffledSpells[k];
+            SpellCast temp = shuffledSpells[k];
             shuffledSpells[k] = shuffledSpells[n];
             shuffledSpells[n] = temp;
         }
@@ -355,7 +358,7 @@ public class DeckSystemScript : MonoBehaviour
     {
         isCooldown = true;
         currentCDTimer = 0;
-        yield return new WaitForSeconds(spellCooldownDuration);
+        yield return new WaitForSeconds(uStats.SpellCooldown.Value);
         isCooldown = false;
     }
 

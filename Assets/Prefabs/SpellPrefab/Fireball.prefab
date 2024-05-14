@@ -96,7 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89c5d4004f791cc468e0eedc923fa544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageDeal: 30
+  uStats: {fileID: 0}
+  playerScript: {fileID: 0}
+  damage: 15
 --- !u!1 &4171652422179458279
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,7 +252,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4545730075028336663, guid: eafb5fe28c005164a92ca42f3f7532a7, type: 3}
       propertyPath: scalingMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4545730075028336663, guid: eafb5fe28c005164a92ca42f3f7532a7, type: 3}
       propertyPath: SizeModule.y.minMaxState
