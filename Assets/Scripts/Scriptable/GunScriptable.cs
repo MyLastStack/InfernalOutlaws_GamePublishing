@@ -14,4 +14,5 @@ public class GunScriptable : ScriptableObject
     public bool usesAmmo;
     public float damage;
     public float range;
+    public float recoil;
 }

@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
     //public AudioSource walkSrc;
 
     //Other variables
-    float targetXRotation; //These two variables are used for camera rotation clamping purposes
-    float targetYRotation;
+    [HideInInspector] public float targetXRotation; //These two variables are used for camera rotation clamping purposes
+    [HideInInspector] public float targetYRotation;
     public bool onGround = false;
     public float camDist = 0f; //How far the camera is from the player. 0 = first person.
     public float groundDist = 0.8f; //how far from the ground does the player need to be to jump
@@ -103,7 +103,9 @@ public class PlayerController : MonoBehaviour
             targetYRotation += Input.GetAxis("Mouse X") * ps.rotateSpeed;
             targetXRotation = Mathf.Clamp(targetXRotation, -90, 90);
 
-            camPivot.transform.eulerAngles = new Vector3(targetXRotation, camPivot.transform.eulerAngles.y, camPivot.transform.eulerAngles.z);
+            var rotationDifference = new Vector3(targetXRotation, camPivot.transform.eulerAngles.y, camPivot.transform.eulerAngles.z) - camPivot.transform.eulerAngles;
+
+            camPivot.transform.eulerAngles += rotationDifference;
             transform.eulerAngles = new Vector3(transform.eulerAngles.x, targetYRotation, transform.eulerAngles.z);
         }
         else

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager; //So so I don't have to repeat eventmanager over and over again
@@ -20,6 +21,7 @@ public class GunScript : MonoBehaviour
     //public GameObject muzzleFlashPosition;
     AudioSource src;
     public Camera cam;
+    public PlayerController player;
     [SerializeField] InputAction fireAction;
     [SerializeField] InputAction reloadAction;
     Timer reloadTimer;
@@ -74,6 +76,9 @@ public class GunScript : MonoBehaviour
 
             src.pitch = Random.Range(0.95f, 1.05f);
             src.Play();
+
+            //Apply recoil
+            StartCoroutine(ApplyRecoil());
 
             //Create ray to point towards
             RaycastHit hit;
@@ -164,7 +169,23 @@ public class GunScript : MonoBehaviour
         {
             obj.transform.GetChild(0).GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.black);
         }
+    }
 
+    public IEnumerator ApplyRecoil()
+    {
+        player.targetXRotation += -stats.recoil.Value * 0.33f;
+        yield return new WaitForSeconds(0.025f);
+        player.targetXRotation += -stats.recoil.Value * 0.33f;
+        yield return new WaitForSeconds(0.025f);
+        player.targetXRotation += -stats.recoil.Value * 0.33f;
+
+        float easeDown = 0.25f;
+        while(easeDown > 0)
+        {
+            easeDown -= 0.025f;
+            player.targetXRotation += 0.025f * stats.recoil.Value / 2;
+            yield return new WaitForSeconds(0.025f);
+        }
     }
 
     void ResetLine()
@@ -201,6 +222,7 @@ public class GunStats
     [HideInInspector] public bool usesAmmo;
     [HideInInspector] public Stat damage;
     [HideInInspector] public Stat range;
+    [HideInInspector] public Stat recoil;
 
     public void SetStats()
     {
@@ -210,5 +232,6 @@ public class GunStats
         usesAmmo = baseStats.usesAmmo;
         damage = new Stat(baseStats.damage);
         range = new Stat(baseStats.range);
+        recoil = new Stat(baseStats.recoil);
     }
 }

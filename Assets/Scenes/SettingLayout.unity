@@ -19363,6 +19363,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a334e7c388e77347a1dddd727ef3446, type: 3}
+--- !u!114 &1573501406 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7638384858405186824, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
+  m_PrefabInstance: {fileID: 1960144242}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0498755974d914a479b1f80eeee9e381, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1576807837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22133,6 +22144,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 09b6f5bf63352c64f89ce12011a76231, type: 3}
   m_PrefabInstance: {fileID: 1774387096}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1787052238 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8133784245326889656, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
+  m_PrefabInstance: {fileID: 1960144242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1793325718
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24792,6 +24808,14 @@ PrefabInstance:
       propertyPath: maxShieldText
       value: 
       objectReference: {fileID: 1200190238}
+    - target: {fileID: 5063397612867166020, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1573501406}
+    - target: {fileID: 5063397612867166020, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
+      propertyPath: camPivot
+      value: 
+      objectReference: {fileID: 1787052238}
     - target: {fileID: 5381264543816095794, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: m_Name
       value: Player
