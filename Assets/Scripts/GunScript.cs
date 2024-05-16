@@ -26,8 +26,7 @@ public class GunScript : MonoBehaviour
     [SerializeField] InputAction reloadAction;
     Timer reloadTimer;
 
-    LineRenderer line;
-    Timer lineTimer;
+    public GameObject linePrefab;
 
 
     //For event data purposes
@@ -41,9 +40,6 @@ public class GunScript : MonoBehaviour
         timer = new Timer(1f / stats.fireRate.Value + 0.001f);
         reloadTimer = new Timer(2);
         reloadTimer.Pause();
-        line = GetComponent<LineRenderer>();
-        lineTimer = new Timer(1);
-        lineTimer.timerComplete.AddListener(ResetLine);
     }
 
     private void Update()
@@ -54,10 +50,11 @@ public class GunScript : MonoBehaviour
 
         #endregion
 
-        if (line.enabled)
-        {
-            lineTimer.Tick(Time.deltaTime);
-        }
+        //if (linePrefab.enabled)
+        //{
+        //    lineTimer.Tick(Time.deltaTime);
+        //}
+
 
 
         timer.Tick(Time.deltaTime);
@@ -69,6 +66,7 @@ public class GunScript : MonoBehaviour
         //Is the game unpaused?
         if (fireAction.IsPressed() && timer.IsDone() && active && (stats.usesAmmo && ammo > 0 || !stats.usesAmmo) && Time.timeScale > 0)
         {
+            //Things to do prior to firing the bullet
             timer.Reset();
             timer.SetMaxTime(1f / stats.fireRate.Value + 0.001f);
             GunFired.Invoke(this);
@@ -80,54 +78,59 @@ public class GunScript : MonoBehaviour
             //Apply recoil
             StartCoroutine(ApplyRecoil());
 
-            //Create ray to point towards
-            RaycastHit hit;
-            Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-            ray.direction += new Vector3
-                (Random.Range(-stats.spread.Value, stats.spread.Value),
-                Random.Range(-stats.spread.Value, stats.spread.Value),
-                Random.Range(-stats.spread.Value, stats.spread.Value));
+            //Firing the bullet(s)
 
-
-            lineTimer.Reset();
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
+            for (int i = 0; i < (int)stats.bullets.Value; i++)
             {
-                line.enabled = true;
-                line.SetPosition(0, transform.position);
-                line.SetPosition(1, hit.point);
+                //Create ray to point towards
+                RaycastHit hit;
+                Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+                ray.direction += new Vector3
+                    (Random.Range(-stats.spread.Value, stats.spread.Value),
+                    Random.Range(-stats.spread.Value, stats.spread.Value),
+                    Random.Range(-stats.spread.Value, stats.spread.Value));
 
-                GameObject hitEntity = hit.collider.gameObject;
-                transform.LookAt(hit.point);
-                if (hitEntity.tag == "Wall") //If it hit a wall/floor
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, mask)) //If it hits a target
                 {
-                    var instance = Instantiate(bulletImpact);
-                    instance.transform.position = hit.point - ray.direction * 0.01f;
-                    instance.transform.forward = hit.normal;
-                }
-                //Deal damage
-                var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
-                if (healthScript != null)
-                {
-                    damageDealt = stats.damage.Value;
-                    //Invoke events
-                    GenericHitEntity.Invoke(hitEntity, damageDealt);
-                    if (healthScript.type == EntityType.Enemy)
+                    GunTrail trail = Instantiate(linePrefab).GetComponent<GunTrail>();
+
+                    trail.startPos = transform.position;
+                    trail.endPos = hit.point;
+
+                    GameObject hitEntity = hit.collider.gameObject;
+                    transform.LookAt(hit.point);
+                    if (hitEntity.tag == "Wall") //If it hit a wall/floor
                     {
-                        GenericHitEnemy.Invoke(hitEntity, damageDealt);
-                        BulletHitEnemy.Invoke(this, hitEntity, damageDealt);
+                        var instance = Instantiate(bulletImpact);
+                        instance.transform.position = hit.point - ray.direction * 0.01f;
+                        instance.transform.forward = hit.normal;
                     }
+                    //Deal damage
+                    var healthScript = hit.collider.gameObject.GetComponent<HealthScript>();
+                    if (healthScript != null)
+                    {
+                        damageDealt = stats.damage.Value;
+                        //Invoke events
+                        GenericHitEntity.Invoke(hitEntity, damageDealt);
+                        if (healthScript.type == EntityType.Enemy)
+                        {
+                            GenericHitEnemy.Invoke(hitEntity, damageDealt);
+                            BulletHitEnemy.Invoke(this, hitEntity, damageDealt);
+                        }
 
-                    StartCoroutine(ApplyRedFlash(hit.collider.gameObject));
-                    healthScript.health -= damageDealt;
+                        StartCoroutine(ApplyRedFlash(hit.collider.gameObject));
+                        healthScript.health -= damageDealt;
+                    }
                 }
-            }
-            else //If it doesn't hit anything
-            {
-                line.enabled = true;
-                line.SetPosition(0, transform.position);
-                line.SetPosition(1, transform.position + ray.direction * 50);
+                else //If it doesn't hit anything
+                {
+                    GunTrail trail = Instantiate(linePrefab).GetComponent<GunTrail>();
 
-                transform.forward = ray.direction;
+                    trail.startPos = transform.position;
+                    trail.endPos = transform.position + ray.direction * 50;
+
+                    transform.forward = ray.direction;
+                }
             }
 
             //Create muzzle flash
@@ -188,13 +191,6 @@ public class GunScript : MonoBehaviour
         }
     }
 
-    void ResetLine()
-    {
-        line.enabled = false;
-
-        lineTimer.Reset();
-    }
-
     private void OnEnable()
     {
         fireAction.Enable();
@@ -223,6 +219,7 @@ public class GunStats
     [HideInInspector] public Stat damage;
     [HideInInspector] public Stat range;
     [HideInInspector] public Stat recoil;
+    [HideInInspector] public Stat bullets;
 
     public void SetStats()
     {
@@ -233,5 +230,6 @@ public class GunStats
         damage = new Stat(baseStats.damage);
         range = new Stat(baseStats.range);
         recoil = new Stat(baseStats.recoil);
+        bullets = new Stat(baseStats.bullets);
     }
 }

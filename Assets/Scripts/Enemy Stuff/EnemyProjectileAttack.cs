@@ -14,7 +14,7 @@ public class EnemyProjectileAttack : MonoBehaviour
 
     void Update()
     {
-        Destroy(gameObject, 10f);
+        Destroy(gameObject, 5f);
     }
 
     private void OnCollisionEnter(Collision collision)
