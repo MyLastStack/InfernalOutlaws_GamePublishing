@@ -16,7 +16,7 @@ MonoBehaviour:
   spread: 0.125
   maxAmmo: 60
   usesAmmo: 0
-  damage: 1
+  damage: 2
   range: 20
-  recoil: 3.5
+  recoil: 12
   bullets: 8
