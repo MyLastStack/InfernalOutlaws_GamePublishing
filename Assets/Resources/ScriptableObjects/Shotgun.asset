@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a79add212a7f54db0211f4c10eccdd, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
+  gunName: Shotgun
   fireRate: 2
   spread: 0.125
   maxAmmo: 60
@@ -20,3 +21,4 @@ MonoBehaviour:
   range: 20
   recoil: 12
   bullets: 8
+  gunType: 1

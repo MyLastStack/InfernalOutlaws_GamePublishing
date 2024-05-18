@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a79add212a7f54db0211f4c10eccdd, type: 3}
   m_Name: Revolver
   m_EditorClassIdentifier: 
+  gunName: Revolver
   fireRate: 5
   spread: 0.05
   maxAmmo: 60
   usesAmmo: 0
   damage: 5
   range: 20
-  recoil: 3.5
+  recoil: 5
   bullets: 1
+  gunType: 0

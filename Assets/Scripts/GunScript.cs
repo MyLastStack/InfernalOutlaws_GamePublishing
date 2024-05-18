@@ -26,6 +26,18 @@ public class GunScript : MonoBehaviour
     [SerializeField] InputAction reloadAction;
     Timer reloadTimer;
 
+    public GameObject revolver;
+    public Transform revolverBulletSpawnLocation;
+
+    public GameObject shotgun;
+    public Transform shotgunBulletSpawnLocation;
+
+    public GameObject machineGun;
+    public Transform machineGunBulletSpawnLocation;
+
+    private Animator gunAnimation;
+    private const string fireAnimation = "Base Layer.Fire";
+
     public GameObject linePrefab;
 
 
@@ -40,6 +52,25 @@ public class GunScript : MonoBehaviour
         timer = new Timer(1f / stats.fireRate.Value + 0.001f);
         reloadTimer = new Timer(2);
         reloadTimer.Pause();
+
+        switch (stats.gunType)
+        {
+            case GunType.Revolver:
+                transform.position = revolverBulletSpawnLocation.position;
+                revolver.SetActive(true);
+                gunAnimation = revolver.GetComponent<Animator>();
+                break;
+            case GunType.Shotgun:
+                transform.position = shotgunBulletSpawnLocation.position;
+                shotgun.SetActive(true);
+                gunAnimation = shotgun.GetComponent<Animator>();
+                break;
+            case GunType.MachineGun:
+                transform.position = machineGunBulletSpawnLocation.position;
+                machineGun.SetActive(true);
+                gunAnimation = machineGun.GetComponent<Animator>();
+                break;
+        }
     }
 
     private void Update()
@@ -77,6 +108,9 @@ public class GunScript : MonoBehaviour
 
             //Apply recoil
             StartCoroutine(ApplyRecoil());
+
+            //Play animation
+            gunAnimation.Play(fireAnimation);
 
             //Firing the bullet(s)
 
@@ -186,7 +220,7 @@ public class GunScript : MonoBehaviour
         while(easeDown > 0)
         {
             easeDown -= 0.025f;
-            player.targetXRotation += 0.025f * stats.recoil.Value / 2;
+            player.targetXRotation += 0.025f * stats.recoil.Value / 4;
             yield return new WaitForSeconds(0.025f);
         }
     }
@@ -221,6 +255,8 @@ public class GunStats
     [HideInInspector] public Stat recoil;
     [HideInInspector] public Stat bullets;
 
+    [HideInInspector] public GunType gunType;
+
     public void SetStats()
     {
         fireRate = new Stat(baseStats.fireRate);
@@ -231,5 +267,13 @@ public class GunStats
         range = new Stat(baseStats.range);
         recoil = new Stat(baseStats.recoil);
         bullets = new Stat(baseStats.bullets);
+        gunType = baseStats.gunType;
     }
+}
+
+public enum GunType
+{
+    Revolver,
+    Shotgun,
+    MachineGun
 }

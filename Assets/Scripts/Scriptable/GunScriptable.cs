@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Gun", menuName = "ScriptableObjects/Gun", order = 1)]
 public class GunScriptable : ScriptableObject
 {
+    public string gunName;
+
     //Firerate variables
     public float fireRate;
     public float spread;
@@ -16,4 +18,6 @@ public class GunScriptable : ScriptableObject
     public float range;
     public float recoil;
     public int bullets;
+
+    public GunType gunType;
 }
