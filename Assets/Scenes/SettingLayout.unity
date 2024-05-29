@@ -24422,7 +24422,7 @@ PrefabInstance:
     - target: {fileID: 5063397612867166020, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: stats.baseStats
       value: 
-      objectReference: {fileID: 11400000, guid: dcff59b8d637db449b975845506f1edd, type: 2}
+      objectReference: {fileID: 11400000, guid: eed4c036a329b7041a061b9fc97adbc6, type: 2}
     - target: {fileID: 5063397612867166020, guid: 26b011a3ce6a3f7488d449ebe4503d55, type: 3}
       propertyPath: shotgunBulletSpawnLocation
       value: 
